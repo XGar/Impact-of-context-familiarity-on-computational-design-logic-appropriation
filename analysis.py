@@ -332,7 +332,7 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
     ratio_1 = _time_ratio.xs(2, level='Object').mean().values[0]
     ratio_2 = _time_ratio.xs(3, level='Object').mean().values[0]
     ratio_3 = _time_ratio.xs(4, level='Object').mean().values[0]
-    ratio = [ratio_1, ratio_2, ratio_3]
+    ratio = np.array([ratio_1, ratio_2, ratio_3])
     cum_ratio = np.cumsum(ratio)
     cum_ratio = cum_ratio - ratio
     for lvl in level_list:
@@ -348,11 +348,11 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
             sns.regplot(x='variable', y='value', data=level_df, color=_color[lvl], ax=ax, order=regression_order,
                         x_estimator=np.mean, scatter=False, ci=None)
     ax.set_ylabel(None)
-    #ax.get_xticks().remove()
-    #ax.set_xticklabels("")
-    ax.set_axis_off()
-    #ax.set_xlabel(None)
-    #ax.tick_params(axis='y', pad=-1)
+    ax.set_xticks(cum_ratio*10+ratio*5)
+    ax.set_xticklabels(['Facade 1', 'Facade 2', 'Facade 3'])
+    #ax.set_axis_off()
+    ax.set_xlabel(None)
+    ax.tick_params(axis='y', pad=-1)
     return
 
 
@@ -515,8 +515,9 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     df_level = df['Level'].unique()
     df.set_index(['Level'], append=True, inplace=True)
     time_level_plot(df, df_level, None, ax13, 2, time_ratio, _color)
-    #ax13.set_frame_on(False)
-    ax13.set_axis_off()
+    ax13.set_frame_on(False)
+    #ax13.set_axis_off()
+    #ax13.set_yticklabels("")
     fig.suptitle(title + ": " + _Title, fontsize=20, y=0.92)
 
     x1 = 0.125
