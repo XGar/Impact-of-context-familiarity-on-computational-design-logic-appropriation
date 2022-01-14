@@ -35,7 +35,11 @@ def global_analysis(df1, study_columns, _title):
 
     if 'Time' in a.columns:
         a['Time'] = a['Time'] / 60
-
+        if 'Max' in df.columns:
+            df['Max'] = df.drop(['Max', 'Time', 'CV', 'Total'], axis=1).max(axis=1)
+        if 'CV' in df.columns:
+            df['CV'] = df.drop(['Max', 'Time', 'CV', 'Total'], axis=1).std(axis=1) / df.drop(['Max', 'Time', 'CV', 'Total'],
+                                                                                         axis=1).mean(axis=1)
     a = a.droplevel(['Level'])
     df = df.droplevel(['Level'])
     if 'Time' not in study_columns:
@@ -117,7 +121,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     time_ratio = (df2.droplevel('Object')['Time'] /
                   df.loc[df2.drop(0, level='Order').apply((lambda x: x.index.values), axis=0)['Time'].values]['Time'])
     time_ratio = pd.DataFrame(time_ratio.values, index=df2['Time'].index)
-    fig = plt.figure(figsize=(24, 12))
+    fig = plt.figure(figsize=(24, 12), facecolor="#fefdfd")
     _title = str(_type[a - 1])
     fig.suptitle(title + ": " + _title, y=0.94, fontsize=20)
     gs = GridSpec(4, 12, figure=fig)
@@ -326,12 +330,8 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
         _df = _df.xs((order_choice + 1), level='Order')
         level_list = df_level[order_choice]
     ratio_1 = _time_ratio.xs(2, level='Object').mean().values[0]
-    # display(ratio_1)
     ratio_2 = _time_ratio.xs(3, level='Object').mean().values[0]
-    # display(ratio_2)
     ratio_3 = _time_ratio.xs(4, level='Object').mean().values[0]
-    # display(ratio_3)
-    # display(ratio_1+ratio_2+ratio_3)
     ratio = [ratio_1, ratio_2, ratio_3]
     cum_ratio = np.cumsum(ratio)
     cum_ratio = cum_ratio - ratio
@@ -348,9 +348,11 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
             sns.regplot(x='variable', y='value', data=level_df, color=_color[lvl], ax=ax, order=regression_order,
                         x_estimator=np.mean, scatter=False, ci=None)
     ax.set_ylabel(None)
-    ax.set_xticklabels("")
-    ax.set_xlabel(None)
-    ax.tick_params(axis='y', pad=-1)
+    #ax.get_xticks().remove()
+    #ax.set_xticklabels("")
+    ax.set_axis_off()
+    #ax.set_xlabel(None)
+    #ax.tick_params(axis='y', pad=-1)
     return
 
 
@@ -513,7 +515,8 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     df_level = df['Level'].unique()
     df.set_index(['Level'], append=True, inplace=True)
     time_level_plot(df, df_level, None, ax13, 2, time_ratio, _color)
-    ax13.set_frame_on(False)
+    #ax13.set_frame_on(False)
+    ax13.set_axis_off()
     fig.suptitle(title + ": " + _Title, fontsize=20, y=0.92)
 
     x1 = 0.125
