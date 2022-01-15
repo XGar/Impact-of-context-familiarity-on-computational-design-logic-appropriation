@@ -263,17 +263,17 @@ def plot_feedback(ax, a, _feedback_df, _color):
     color_set = colors.drop_duplicates().to_list()
     ax.set_autoscaley_on(False)
     ax.set_ybound(0, 11)
-    r = sns.pointplot(x='variable', y='value', data=_feedback_df[_feedback_df['Survey'] == 'A'], hue='Level', ci='sd',
-                      dodge=0.3, palette=color_set, markers='x', ax=ax, linestyles='--')
+    # r = sns.pointplot(x='variable', y='value', data=_feedback_df[_feedback_df['Survey'] == 'A'], hue='Level', ci='sd',
+    #                  dodge=0.3, palette=color_set, markers='x', ax=ax, linestyles='--')
 
-    _lines = r.get_lines()
-    for line in _lines[:]:
-        line.set_alpha(0.6)
-        line.set_linewidth(1.5)
-        line.set_zorder(1)
+    # _lines = r.get_lines()
+    #for line in _lines[:]:
+     #   line.set_alpha(0.6)
+      #  line.set_linewidth(1.5)
+       # line.set_zorder(1)
 
-    sns.pointplot(x='variable', y='value', data=_feedback_df[_feedback_df['Survey'] == 'B'], hue='Level', ci='sd',
-                  dodge=0.3, palette=color_set, ax=ax)
+    sns.barplot(x='variable', y='value', data=_feedback_df[_feedback_df['Survey'] == 'B'], hue='Level', ci='sd',
+                  palette=color_set, ax=ax)
     ax.set_ylabel(None)
     ax.set_xlabel(None)
     if a is not None:
@@ -499,7 +499,7 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
         line.set_linewidth(0.5)
         _it += 1
     level_plot_df = level_plot_df.melt(id_vars='Level')
-    sns.pointplot(x='variable', y='value', hue='Level', palette=color_set, data=level_plot_df, ax=ax2, dodge=0.5)
+    sns.barplot(x='variable', y='value', hue='Level', palette=color_set, data=level_plot_df, ax=ax2)#, dodge=0.5)
 
     context_feedback = feedback_df[feedback_df['Type'] == _type[a - 1]]
     context_feedback['Level'] = context_feedback['Level'].map(lambda _x: _x[b])
