@@ -176,9 +176,8 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     level_plot = result.drop(keep_list, axis=1).drop(['Level'], axis=1)
     level_plot = level_plot.reset_index('Order', drop=False)
     level_plot = level_plot.melt(id_vars='Order')
-    sns.pointplot(x='variable', y='value', data=level_plot, hue='Order', palette='RdYlBu_r', ax=ax5, ci='sd', dodge=0.2)
-    sns.pointplot(x='variable', y='value', data=context_feedback[context_feedback['Survey'] == 'B'], hue='Order',
-                  ci='sd', dodge=0.15, palette='RdYlBu_r', ax=ax11)
+    sns.barplot(x='variable', y='value', data=level_plot, hue='Order', palette='RdYlBu_r', ax=ax5)#, dodge=0.2)
+    sns.barplot(x='variable', y='value', data=context_feedback[context_feedback['Survey'] == 'B'], hue='Order', palette='RdYlBu_r', ax=ax11)
     ax11.set_ylabel(None)
     ax11.get_legend().remove()
     ax11.set_xlabel(None)
@@ -293,8 +292,7 @@ def interaction_line_plot(_ax, result, _order, keep_list, _color):
     int1['Level'] = int1['Level'].map(lambda x: niv[int(x)])
     color_set = colors.drop_duplicates().to_list()
     int1 = int1.melt(id_vars=['Level'])
-    sns.pointplot(x=int1['variable'], y=int1['value'], data=int1, hue=int1['Level'], palette=color_set, ax=_ax, ci='sd',
-                  dodge=0.2)
+    sns.barplot(x=int1['variable'], y=int1['value'], data=int1, hue=int1['Level'], palette=color_set, ax=_ax)
     _ax.set_title('Interaction ' + str(_order), loc='left', pad=3)
     _ax.set_ylabel(None)
     _ax.set_xlabel(None)
