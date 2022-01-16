@@ -1,5 +1,4 @@
 import datetime
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -11,6 +10,11 @@ _type = ['Grasshopper', 'Hybrid', 'Plugin']
 niv = ['No experience', 'Novice', 'Limited', 'Basic', 'Advanced', 'Expert']
 _color = sns.mpl_palette('Paired', 5)
 _color2 = sns.mpl_palette('RdYlBu_r', 3)
+
+
+# TODO fix order of survey plot by level
+# TODO fix color of plots by order for hybrid
+# TODO change units of time plots to iterations/minute
 
 
 def global_analysis(df1, study_columns, _title):
@@ -38,8 +42,9 @@ def global_analysis(df1, study_columns, _title):
         if 'Max' in df.columns:
             df['Max'] = df.drop(['Max', 'Time', 'CV', 'Total'], axis=1).max(axis=1)
         if 'CV' in df.columns:
-            df['CV'] = df.drop(['Max', 'Time', 'CV', 'Total'], axis=1).std(axis=1) / df.drop(['Max', 'Time', 'CV', 'Total'],
-                                                                                         axis=1).mean(axis=1)
+            df['CV'] = df.drop(['Max', 'Time', 'CV', 'Total'], axis=1).std(axis=1) / df.drop(
+                ['Max', 'Time', 'CV', 'Total'],
+                axis=1).mean(axis=1)
     a = a.droplevel(['Level'])
     df = df.droplevel(['Level'])
     if 'Time' not in study_columns:
@@ -176,8 +181,9 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     level_plot = result.drop(keep_list, axis=1).drop(['Level'], axis=1)
     level_plot = level_plot.reset_index('Order', drop=False)
     level_plot = level_plot.melt(id_vars='Order')
-    sns.barplot(x='variable', y='value', data=level_plot, hue='Order', palette='RdYlBu_r', ax=ax5)#, dodge=0.2)
-    sns.barplot(x='variable', y='value', data=context_feedback[context_feedback['Survey'] == 'B'], hue='Order', palette='RdYlBu_r', ax=ax11)
+    sns.barplot(x='variable', y='value', data=level_plot, hue='Order', palette='RdYlBu_r', ax=ax5, errwidth=0.2)  # , dodge=0.2)
+    sns.barplot(x='variable', y='value', data=context_feedback[context_feedback['Survey'] == 'B'], hue='Order',
+                palette='RdYlBu_r', ax=ax11, errwidth=0.2)
     ax11.set_ylabel(None)
     ax11.get_legend().remove()
     ax11.set_xlabel(None)
@@ -266,13 +272,13 @@ def plot_feedback(ax, a, _feedback_df, _color):
     #                  dodge=0.3, palette=color_set, markers='x', ax=ax, linestyles='--')
 
     # _lines = r.get_lines()
-    #for line in _lines[:]:
-     #   line.set_alpha(0.6)
-      #  line.set_linewidth(1.5)
-       # line.set_zorder(1)
+    # for line in _lines[:]:
+    #   line.set_alpha(0.6)
+    #  line.set_linewidth(1.5)
+    # line.set_zorder(1)
 
     sns.barplot(x='variable', y='value', data=_feedback_df[_feedback_df['Survey'] == 'B'], hue='Level', ci='sd',
-                  palette=color_set, ax=ax)
+                palette=color_set, ax=ax, errwidth=0.2)
     ax.set_ylabel(None)
     ax.set_xlabel(None)
     if a is not None:
@@ -292,7 +298,7 @@ def interaction_line_plot(_ax, result, _order, keep_list, _color):
     int1['Level'] = int1['Level'].map(lambda x: niv[int(x)])
     color_set = colors.drop_duplicates().to_list()
     int1 = int1.melt(id_vars=['Level'])
-    sns.barplot(x=int1['variable'], y=int1['value'], data=int1, hue=int1['Level'], palette=color_set, ax=_ax)
+    sns.barplot(x=int1['variable'], y=int1['value'], data=int1, hue=int1['Level'], palette=color_set, ax=_ax, errwidth=0.2)
     _ax.set_title('Interaction ' + str(_order), loc='left', pad=3)
     _ax.set_ylabel(None)
     _ax.set_xlabel(None)
@@ -346,9 +352,9 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
             sns.regplot(x='variable', y='value', data=level_df, color=_color[lvl], ax=ax, order=regression_order,
                         x_estimator=np.mean, scatter=False, ci=None)
     ax.set_ylabel(None)
-    ax.set_xticks(cum_ratio*10+ratio*5)
+    ax.set_xticks(cum_ratio * 10 + ratio * 5)
     ax.set_xticklabels(['Facade 1', 'Facade 2', 'Facade 3'])
-    #ax.set_axis_off()
+    # ax.set_axis_off()
     ax.set_xlabel(None)
     ax.tick_params(axis='y', pad=-1)
     return
@@ -497,7 +503,7 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
         line.set_linewidth(0.5)
         _it += 1
     level_plot_df = level_plot_df.melt(id_vars='Level')
-    sns.barplot(x='variable', y='value', hue='Level', palette=color_set, data=level_plot_df, ax=ax2)#, dodge=0.5)
+    sns.barplot(x='variable', y='value', hue='Level', palette=color_set, data=level_plot_df, ax=ax2)  # , dodge=0.5)
 
     context_feedback = feedback_df[feedback_df['Type'] == _type[a - 1]]
     context_feedback['Level'] = context_feedback['Level'].map(lambda _x: _x[b])
@@ -514,8 +520,8 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     df.set_index(['Level'], append=True, inplace=True)
     time_level_plot(df, df_level, None, ax13, 2, time_ratio, _color)
     ax13.set_frame_on(False)
-    #ax13.set_axis_off()
-    #ax13.set_yticklabels("")
+    # ax13.set_axis_off()
+    # ax13.set_yticklabels("")
     fig.suptitle(title + ": " + _Title, fontsize=20, y=0.92)
 
     x1 = 0.125
