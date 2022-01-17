@@ -13,8 +13,6 @@ _color = sns.mpl_palette('Paired', 5)
 _color2 = sns.mpl_palette('RdYlBu_r', 3)
 
 
-# TODO fix order of survey plot by level
-# TODO fix color of plots by order for hybrid
 # TODO change units of time plots to iterations/minute
 
 
@@ -88,7 +86,7 @@ def global_analysis(df1, study_columns, _title):
     av_plugin = df.xs('Plugin', level='Type').drop(study_columns, axis=1).mean()
     av_plugin.name = 'Plugin'
     average = pd.DataFrame([av_gh, av_hyb, av_plugin], index=['GH', 'Hybrid', 'Plugin'])
-    sns.heatmap(average, ax=ax9, cbar=None, annot=True, cmap="vlag", linewidth=0.5)
+    sns.heatmap(average, ax=ax9, cbar=None, annot=True, cmap='vlag', linewidth=0.5)
     sns.heatmap(average, ax=ax5, cbar=None, annot=True, cmap="vlag", linewidth=0.5)
     df = df.loc[:, ['Grasshopper', 'Hybrid', 'Plugin'], :]
     locs = ax5.get_xticks()
@@ -97,7 +95,7 @@ def global_analysis(df1, study_columns, _title):
     gh.columns = locs
     gh = gh.reset_index(level='Type', drop=False)
     gh = gh.melt(id_vars=['Type'])
-    sns.pointplot(x=gh['variable'], y=gh['value'], data=df, hue=gh['Type'], ax=ax2, palette="RdYlBu", dodge=0.2)
+    sns.barplot(x=gh['variable'], y=gh['value'], data=df, hue=gh['Type'], ax=ax2, palette="RdYlBu")#, dodge=0.2)
     ax2.set_xlabel(None)
     ax2.legend(loc='upper left')
     ax2.set_xticklabels("")
@@ -265,8 +263,10 @@ def plot_feedback(ax, a, _feedback_df, _color):
         pass
     else:
         _feedback_df = _feedback_df[_feedback_df['Order'] == a]
+    _feedback_df.sort_values('Level', inplace=True)
     colors = _feedback_df['Level'].map(lambda x: _color[int(x)])
     _feedback_df['Level'] = _feedback_df['Level'].map(lambda x: niv[int(x)])
+
     color_set = colors.drop_duplicates().to_list()
     ax.set_autoscaley_on(False)
     ax.set_ybound(0, 11)
@@ -278,8 +278,8 @@ def plot_feedback(ax, a, _feedback_df, _color):
     #   line.set_alpha(0.6)
     #  line.set_linewidth(1.5)
     # line.set_zorder(1)
-
-    sns.barplot(x='variable', y='value', data=_feedback_df[_feedback_df['Survey'] == 'B'], hue='Level', ci='sd',
+    _feedback_df = _feedback_df[_feedback_df['Survey'] == 'B']
+    sns.barplot(x='variable', y='value', data=_feedback_df, hue='Level', ci='sd',
                 palette=color_set, ax=ax, errwidth=0.5)
     ax.set_ylabel(None)
     ax.set_xlabel(None)
@@ -319,8 +319,11 @@ def box_plot(ax, c, r, keep_list):
     color_palette.append('gray')
     r2['Order'] = 4
     r = r.append(r2)
+    colors = r['Level'].map(lambda x: _color[int(x)])
+    # int1['Level'] = int1['Level'].map(lambda x: niv[int(x)])
+    color_set = colors.drop_duplicates().to_list()
     sns.boxplot(ax=ax, y='Order', x=keep_list[c], data=r, orient='h', hue='Order', dodge=False, palette=color_palette)
-    sns.swarmplot(ax=ax, y='Order', x=keep_list[c], data=r, orient='h', hue='Level', palette='Paired', dodge=True, s=10,
+    sns.swarmplot(ax=ax, y='Order', x=keep_list[c], data=r, orient='h', hue='Level', palette=color_set, dodge=True, s=10,
                   marker='x', linewidth=3)
     ax.set_title(keep_list[c], loc='center', pad=3)
     ax.get_legend().remove()
