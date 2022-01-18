@@ -13,9 +13,6 @@ _color = sns.mpl_palette('Paired', 5)
 _color2 = sns.mpl_palette('RdYlBu_r', 3)
 
 
-# TODO change units of time plots to iterations/minute
-
-
 def global_analysis(df1, study_columns, _title):
     df = df1.droplevel(['Order']).groupby(level=['Name', 'Level', 'Type'], sort=False).sum()
     fig = plt.figure(figsize=(24, 8), facecolor="#fefdfd")
