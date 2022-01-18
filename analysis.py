@@ -11,13 +11,14 @@ _type = ['Grasshopper', 'Hybrid', 'Plugin']
 niv = ['No experience', 'Novice', 'Limited', 'Basic', 'Advanced', 'Expert']
 _color = sns.mpl_palette('Paired', 5)
 _color2 = sns.mpl_palette('RdYlBu_r', 3)
+# TODO Consistent domain for plotting
 
 
 def global_analysis(df1, study_columns, _title):
     df = df1.droplevel(['Order']).groupby(level=['Name', 'Level', 'Type'], sort=False).sum()
     fig = plt.figure(figsize=(24, 8), facecolor="#fefdfd")
     fig.suptitle(_title + ': Total', x=0.5, y=0.92, fontsize=20)
-    gs = GridSpec(4, 40, figure=fig)
+    gs = GridSpec(4, 40, figure=fig,wspace=3)
     ax1 = fig.add_subplot(gs[1:3, :4])
     ax3 = fig.add_subplot(gs[1:3, 5:9])
     ax4 = fig.add_subplot(gs[1:3, 10:14])
@@ -124,8 +125,8 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     time_ratio = pd.DataFrame(time_ratio.values, index=df2['Time'].index)
     fig = plt.figure(figsize=(24, 12), facecolor="#fefdfd")
     _title = str(_type[a - 1])
-    fig.suptitle(title + ": " + _title, y=0.94, fontsize=20)
-    gs = GridSpec(4, 12, figure=fig)
+    fig.suptitle('Number of '+title + ": " + _title, y=0.94, fontsize=20)
+    gs = GridSpec(4, 12, figure=fig, wspace=0.5, hspace=0.2)
     ax1 = fig.add_subplot(gs[:1, 3:6])
     ax2 = fig.add_subplot(gs[1:2, 3:6])
     ax3 = fig.add_subplot(gs[2:3, 3:6])
@@ -325,6 +326,8 @@ def box_plot(ax, c, r, keep_list):
     ax.set_title(keep_list[c], loc='center', pad=3)
     ax.get_legend().remove()
     ax.set_ylabel(None)
+    ax.set_frame_on(False)
+    ax.grid(visible=True)
     ax.set_yticklabels(['Interaction 1', 'Interaction 2', 'Interaction 3', 'Average'])
     return
 
@@ -354,7 +357,7 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
             level_df = _df_.xs(lvl, level='Level').melt()
             sns.regplot(x='variable', y='value', data=level_df, color=_color[lvl], ax=ax, order=regression_order,
                         x_estimator=np.mean, scatter=False, ci=None)
-    ax.set_ylabel(None)
+    #ax.set_ylabel(None)
     ax.set_xticks(cum_ratio * 10 + ratio * 5)
     ax.set_xticklabels(['Facade 1', 'Facade 2', 'Facade 3'])
     # ax.set_axis_off()
@@ -449,7 +452,7 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     fig = plt.figure(figsize=(22, 12), facecolor="#fefdfd")
     _Title = str(_type[a])
     fig.title = str(title)
-    gs = GridSpec(6, 30, figure=fig)
+    gs = GridSpec(6, 30, figure=fig, wspace=3.5, hspace=0.3)
     ax1 = fig.add_subplot(gs[2:4, :3])
     ax3 = fig.add_subplot(gs[2:4, 4:7])
     ax4 = fig.add_subplot(gs[2:4, 8:11])
@@ -523,11 +526,12 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     df.set_index(['Level'], append=True, inplace=True)
     time_level_plot(df, df_level, None, ax13, 2, time_ratio, _color)
     ax13.set_frame_on(False)
-    fig.suptitle(title + ": " + _Title, fontsize=20, y=0.92)
+    ax13.set_ylabel(title + '/minute')
+    fig.suptitle('Number of '+title + ": " + _Title, fontsize=20, y=0.92)
 
     x1 = 0.125
     x2 = 0.9
-    y1 = 0.361
+    y1 = 0.355
     _t = pd.Series([0, 0, 0, 0, 0, 0])
     level_length = _t.T.add(level_length, fill_value=0.0, axis=0)
     h_cell = (y1 - y2) / (len(it[str(study_columns[0])]) - 3)
