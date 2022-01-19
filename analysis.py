@@ -11,7 +11,6 @@ _type = ['Grasshopper', 'Hybrid', 'Plugin']
 niv = ['No experience', 'Novice', 'Limited', 'Basic', 'Advanced', 'Expert']
 _color = sns.mpl_palette('Paired', 5)
 _color2 = sns.mpl_palette('RdYlBu_r', 3)
-# TODO Consistent domain for plotting
 
 
 def global_analysis(df1, study_columns, _title):
@@ -128,8 +127,8 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     fig.suptitle('Number of '+title + ": " + _title, y=0.94, fontsize=20)
     gs = GridSpec(4, 12, figure=fig, wspace=0.5, hspace=0.2)
     ax1 = fig.add_subplot(gs[:1, 3:6])
-    ax2 = fig.add_subplot(gs[1:2, 3:6])
-    ax3 = fig.add_subplot(gs[2:3, 3:6])
+    ax2 = fig.add_subplot(gs[1:2, 3:6], sharey=ax1)
+    ax3 = fig.add_subplot(gs[2:3, 3:6], sharey=ax1)
     ax4 = fig.add_subplot(gs[:4, :1])
     ax5 = fig.add_subplot(gs[3:4, 3:6])
     ax6 = fig.add_subplot(gs[:4, 1:2])
@@ -139,8 +138,8 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     ax10 = fig.add_subplot(gs[2:3, 9:])
     ax11 = fig.add_subplot(gs[3:4, 9:])
     ax12 = fig.add_subplot(gs[:1, 6:9])
-    ax13 = fig.add_subplot(gs[1:2, 6:9])
-    ax14 = fig.add_subplot(gs[2:3, 6:9])
+    ax13 = fig.add_subplot(gs[1:2, 6:9], sharey=ax12)
+    ax14 = fig.add_subplot(gs[2:3, 6:9], sharey=ax12)
     ax15 = fig.add_subplot(gs[3:4, 6:9])
     result = df.reset_index('Level', drop=False)
     result['Level'] = result['Level'].map(lambda x: x[b])
@@ -168,6 +167,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     ax = [ax12, ax13, ax14]
     for i in range(3):
         time_level_plot(df, df_level, i, ax[i], 3, time_ratio, _color)
+        ax[i].set_ylabel(title+'/minute')
     df = df.droplevel('Level')
     for i in range(3):
         sns.regplot(x='variable', y='value', data=df.xs(i + 1, level='Order').melt().applymap(lambda x: int(x)),
@@ -524,7 +524,7 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     df['Level'] = df['Level'].map(lambda _x: int(_x[b]))
     df_level = df['Level'].unique()
     df.set_index(['Level'], append=True, inplace=True)
-    time_level_plot(df, df_level, None, ax13, 2, time_ratio, _color)
+    time_level_plot(df, df_level, None, ax13, 3, time_ratio, _color)
     ax13.set_frame_on(False)
     ax13.set_ylabel(title + '/minute')
     fig.suptitle('Number of '+title + ": " + _Title, fontsize=20, y=0.92)
