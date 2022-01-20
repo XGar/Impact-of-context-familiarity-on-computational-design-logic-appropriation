@@ -1,6 +1,7 @@
 import datetime
 
 import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -17,7 +18,7 @@ def global_analysis(df1, study_columns, _title):
     df = df1.droplevel(['Order']).groupby(level=['Name', 'Level', 'Type'], sort=False).sum()
     fig = plt.figure(figsize=(24, 8), facecolor="#fefdfd")
     fig.suptitle(_title + ': Total', x=0.5, y=0.92, fontsize=20)
-    gs = GridSpec(4, 40, figure=fig,wspace=3)
+    gs = GridSpec(4, 40, figure=fig, wspace=3)
     ax1 = fig.add_subplot(gs[1:3, :4])
     ax3 = fig.add_subplot(gs[1:3, 5:9])
     ax4 = fig.add_subplot(gs[1:3, 10:14])
@@ -92,7 +93,7 @@ def global_analysis(df1, study_columns, _title):
     gh.columns = locs
     gh = gh.reset_index(level='Type', drop=False)
     gh = gh.melt(id_vars=['Type'])
-    sns.barplot(x=gh['variable'], y=gh['value'], data=df, hue=gh['Type'], ax=ax2, palette="RdYlBu")#, dodge=0.2)
+    sns.barplot(x=gh['variable'], y=gh['value'], data=df, hue=gh['Type'], ax=ax2, palette="RdYlBu", errwidth=0.5)
     ax2.set_xlabel(None)
     ax2.legend(loc='upper left')
     ax2.set_xticklabels("")
@@ -111,19 +112,23 @@ def global_analysis(df1, study_columns, _title):
 
 
 def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
+    matplotlib.rcParams['axes.autolimit_mode'] = 'round_numbers'
+    matplotlib.rcParams['axes.xmargin'] = 0
+    matplotlib.rcParams['axes.ymargin'] = 0
     label = (_type[a - 1])
     df2 = df.xs(label, level='Type')
-    df = df2.groupby(level=['Name', 'Level', 'Order'], sort=False).sum()
+    df = df.groupby(level=['Name', 'Level', 'Order', 'Type'], sort=False).sum()
     if 'Max' in df.columns:
         df['Max'] = df.drop(['Max', 'Time', 'CV', 'Total'], axis=1).max(axis=1)
     if 'CV' in df.columns:
         df['CV'] = df.drop(['Max', 'Time', 'CV', 'Total'], axis=1).std(axis=1) / df.drop(['Max', 'Time', 'CV', 'Total'],
                                                                                          axis=1).mean(axis=1)
     time_ratio = (df2.droplevel('Object')['Time'] /
-                  df.loc[df2.drop(0, level='Order').apply((lambda x: x.index.values), axis=0)['Time'].values]['Time'])
+                  df.xs(label, level='Type').loc[df2.drop(0, level='Order').apply((lambda x: x.index.values), axis=0)['Time'].values]['Time'])
     time_ratio = pd.DataFrame(time_ratio.values, index=df2['Time'].index)
     fig = plt.figure(figsize=(24, 12), facecolor="#fefdfd")
     _title = str(_type[a - 1])
+    # plt.rcParams['axes.autolimit_mode'] = 'round_numbers'
     fig.suptitle('Number of '+title + ": " + _title, y=0.94, fontsize=20)
     gs = GridSpec(4, 12, figure=fig, wspace=0.5, hspace=0.2)
     ax1 = fig.add_subplot(gs[:1, 3:6])
@@ -151,12 +156,14 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     context_feedback = feedback_df[feedback_df['Type'] == _type[a - 1]]
     context_feedback['Level'] = context_feedback['Level'].map(lambda x: x[b])
     ax = [ax1, ax2, ax3, ax4, ax6, ax7, ax8, ax9, ax10]
+
     for i in range(3):
-        interaction_line_plot(ax[i], result, i + 1, keep_list, _color)
-        box_plot(ax[i + 3], i, result, keep_list)
+        interaction_line_plot(ax[i], result.xs(label, level='Type'), i + 1, keep_list, _color)
+        box_plot(ax[i + 3], i, result, keep_list, label)
         plot_feedback(ax[i + 6], i + 1, context_feedback, _color)
     ax6.set_yticklabels("")
     ax7.set_yticklabels("")
+    matplotlib.rcParams.update(matplotlib.rcParamsDefault)
     df = time_df.xs(_type[a - 1], level='Type').reset_index('Level', drop=False)
     df['Level'] = df['Level'].map(lambda x: int(x[b]))
     df0level = df.xs(1, level='Order')['Level'].unique()
@@ -167,7 +174,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     ax = [ax12, ax13, ax14]
     for i in range(3):
         time_level_plot(df, df_level, i, ax[i], 3, time_ratio, _color)
-        ax[i].set_ylabel(title+'/minute')
+        ax[i].set_ylabel(title+'/minute', labelpad=1)
     df = df.droplevel('Level')
     for i in range(3):
         sns.regplot(x='variable', y='value', data=df.xs(i + 1, level='Order').melt().applymap(lambda x: int(x)),
@@ -175,7 +182,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     ax15.tick_params(axis='y', pad=-1)
     ax15.set_ylabel(None)
     ax15.set_xlabel(None)
-    level_plot = result.drop(keep_list, axis=1).drop(['Level'], axis=1)
+    level_plot = result.xs(label, level='Type').drop(keep_list, axis=1).drop(['Level'], axis=1)
     level_plot = level_plot.reset_index('Order', drop=False)
     level_plot = level_plot.melt(id_vars='Order')
     sns.barplot(x='variable', y='value', data=level_plot, hue='Order', palette='RdYlBu_r', ax=ax5,
@@ -309,22 +316,35 @@ def interaction_line_plot(_ax, result, _order, keep_list, _color):
     return int1
 
 
-def box_plot(ax, c, r, keep_list):
-    r = r[[keep_list[c], 'Level']]
+def box_plot(ax, c, _r, keep_list, label):
+    r = _r.xs(label, level='Type')[[keep_list[c], 'Level']]
+    r3=_r.drop(0, level='Order')[[keep_list[c], 'Level']].reset_index('Order', drop=False)
+    r3['Order'] = 4
     r = r.reset_index('Order', drop=False)
     r2 = r.copy()
     color_palette = sns.mpl_palette('RdYlBu_r', 3)
     color_palette.append('gray')
     r2['Order'] = 4
     r = r.append(r2)
+    ax.locator_params(axis='x', tight=False, min_n_ticks=3, prune=None)
     colors = r['Level'].map(lambda x: _color[int(x)])
-    # int1['Level'] = int1['Level'].map(lambda x: niv[int(x)])
     color_set = colors.drop_duplicates().to_list()
+    inv = sns.boxplot(ax=ax, y='Order', x=keep_list[c], data=r3, orient='h', hue='Order', dodge=False, palette=color_palette)
+    t=inv.get_children()
+    for thing in t:
+        try:
+            thing.remove()
+        except:
+            pass
     sns.boxplot(ax=ax, y='Order', x=keep_list[c], data=r, orient='h', hue='Order', dodge=False, palette=color_palette)
-    sns.swarmplot(ax=ax, y='Order', x=keep_list[c], data=r, orient='h', hue='Level', palette=color_set, dodge=True, s=10,
-                  marker='x', linewidth=3)
+    sns.swarmplot(ax=ax, y='Order', x=keep_list[c], data=r, orient='h', hue='Level', palette=color_set, s=10,
+                  dodge=True, marker='x', linewidth=3)
     ax.set_title(keep_list[c], loc='center', pad=3)
     ax.get_legend().remove()
+    #ax.relim()
+    #locs=ax.get_xticks()
+    #locs=np.insert(locs, 0, 0)
+    #ax.set_xticks(locs)
     ax.set_ylabel(None)
     ax.set_frame_on(False)
     ax.grid(visible=True)
@@ -357,7 +377,6 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
             level_df = _df_.xs(lvl, level='Level').melt()
             sns.regplot(x='variable', y='value', data=level_df, color=_color[lvl], ax=ax, order=regression_order,
                         x_estimator=np.mean, scatter=False, ci=None)
-    #ax.set_ylabel(None)
     ax.set_xticks(cum_ratio * 10 + ratio * 5)
     ax.set_xticklabels(['Facade 1', 'Facade 2', 'Facade 3'])
     # ax.set_axis_off()
@@ -509,7 +528,7 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
         line.set_linewidth(0.5)
         _it += 1
     level_plot_df = level_plot_df.melt(id_vars='Level')
-    sns.barplot(x='variable', y='value', hue='Level', palette=color_set, data=level_plot_df, ax=ax2, errwidth=0.5)  # , dodge=0.5)
+    sns.barplot(x='variable', y='value', hue='Level', palette=color_set, data=level_plot_df, ax=ax2, errwidth=0.5)
 
     context_feedback = feedback_df[feedback_df['Type'] == _type[a - 1]]
     context_feedback['Level'] = context_feedback['Level'].map(lambda _x: _x[b])
