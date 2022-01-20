@@ -346,7 +346,7 @@ def box_plot(ax, c, _r, keep_list, label):
     #locs=np.insert(locs, 0, 0)
     #ax.set_xticks(locs)
     ax.set_ylabel(None)
-    ax.set_frame_on(False)
+    # ax.set_frame_on(False)
     ax.grid(visible=True)
     ax.set_yticklabels(['Interaction 1', 'Interaction 2', 'Interaction 3', 'Average'])
     return
