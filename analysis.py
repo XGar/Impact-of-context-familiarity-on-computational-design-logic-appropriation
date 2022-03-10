@@ -14,6 +14,8 @@ _color = sns.mpl_palette('Paired', 5)
 _color2 = sns.mpl_palette('RdYlBu_r', 3)
 
 
+# todo : Split Data Engineering and data analysis
+
 def global_analysis(df1, study_columns, _title):
     df = df1.droplevel(['Order']).groupby(level=['Name', 'Level', 'Type'], sort=False).sum()
     fig = plt.figure(figsize=(24, 8), facecolor="#fefdfd")
@@ -42,7 +44,7 @@ def global_analysis(df1, study_columns, _title):
             a['CV'] = a.drop(['Max', 'Time', 'CV', 'Total'], axis=1).std(axis=1) / a.drop(
                 ['Max', 'Time', 'CV', 'Total'], axis=1).mean(axis=1)
         if 'Iterations / Minute' in a.columns:
-            a['Iterations / Minute'] = a['Total']/a['Time']
+            a['Iterations / Minute'] = a['Total'] / a['Time']
 
     a = a.droplevel(['Level'])
     df = df.droplevel(['Level'])
@@ -123,7 +125,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     if 'CV' in df.columns:
         df['CV'] = df.loc[:, 'TileXSize':'DoorNumber'].std(axis=1) / df.loc[:, 'TileXSize':'DoorNumber'].mean(axis=1)
     time_ratio = (df2.droplevel('Object')['Time'] / df.xs(label, level='Type').loc[
-                      df2.drop(0, level='Order').apply((lambda x: x.index.values), axis=0)['Time'].values]['Time'])
+        df2.drop(0, level='Order').apply((lambda x: x.index.values), axis=0)['Time'].values]['Time'])
     time_ratio = pd.DataFrame(time_ratio.values, index=df2['Time'].index)
     fig = plt.figure(figsize=(24, 12), facecolor="#fefdfd")
     _title = str(_type[a - 1])
@@ -317,7 +319,7 @@ def box_plot(ax, c, _r, keep_list, label):
     r2['Order'] = 4
     r = r.append(r2)
     ax.locator_params(axis='x', nbins=3, prune=None)
-    #ax.set_xlim(left=0, auto=None)
+    # ax.set_xlim(left=0, auto=None)
     colors = r['Level'].map(lambda x: _color[int(x)])
     color_set = colors.drop_duplicates().to_list()
     inv = sns.boxplot(ax=ax, y='Order', x=keep_list[c], data=r3, orient='h', hue='Order', dodge=False,
@@ -332,7 +334,7 @@ def box_plot(ax, c, _r, keep_list, label):
     sns.swarmplot(ax=ax, y='Order', x=keep_list[c], data=r, orient='h', hue='Level', palette=color_set, s=10,
                   dodge=True, marker='x', linewidth=3)
     ax.set_title(keep_list[c], loc='center', pad=3)
-    #ax.set_xlim(left=0, auto=None)
+    # ax.set_xlim(left=0, auto=None)
     ax.get_legend().remove()
     ax.set_ylabel(None)
     ax.grid(visible=True)
@@ -342,7 +344,7 @@ def box_plot(ax, c, _r, keep_list, label):
 
 def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_ratio, _color):
     if order_choice is None:
-        #_df = _df.droplevel('Order')
+        # _df = _df.droplevel('Order')
         level_list = df_level
     else:
         _df = _df.xs((order_choice + 1), level='Order')
@@ -367,6 +369,7 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
     ax.set_xticks(cum_ratio * 10 + ratio * 5)
     ax.set_xticklabels(['Facade 1', 'Facade 2', 'Facade 3'])
     ax.set_ybound(lower=0)
+    ax.set_title("Rate/Time", loc="left", pad=-5)
     ax.set_xlabel(None)
     ax.tick_params(axis='y', pad=-1)
     return
