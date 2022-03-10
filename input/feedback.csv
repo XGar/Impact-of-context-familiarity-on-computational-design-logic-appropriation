@@ -1,0 +1,421 @@
+Type,Level,Order,Survey,variable,value
+Grasshopper,303112001,1,A,Accessibility,9.0
+Hybrid,303112001,2,A,Accessibility,9.0
+Plugin,303112001,3,A,Accessibility,7.0
+Grasshopper,303112001,1,B,Accessibility,
+Hybrid,303112001,2,B,Accessibility,
+Plugin,303112001,3,B,Accessibility,
+Grasshopper,404000100,3,A,Accessibility,10.0
+Hybrid,404000100,1,A,Accessibility,10.0
+Plugin,404000100,2,A,Accessibility,10.0
+Grasshopper,404000100,3,B,Accessibility,10.0
+Hybrid,404000100,1,B,Accessibility,10.0
+Plugin,404000100,2,B,Accessibility,9.0
+Grasshopper,404223002,2,A,Accessibility,8.0
+Hybrid,404223002,3,A,Accessibility,10.0
+Plugin,404223002,1,A,Accessibility,9.0
+Grasshopper,404223002,2,B,Accessibility,9.0
+Hybrid,404223002,3,B,Accessibility,10.0
+Plugin,404223002,1,B,Accessibility,8.0
+Grasshopper,303334003,1,A,Accessibility,8.0
+Hybrid,303334003,3,A,Accessibility,8.0
+Plugin,303334003,2,A,Accessibility,7.0
+Grasshopper,303334003,1,B,Accessibility,8.0
+Hybrid,303334003,3,B,Accessibility,7.0
+Plugin,303334003,2,B,Accessibility,7.0
+Grasshopper,404113101,2,A,Accessibility,5.0
+Hybrid,404113101,1,A,Accessibility,8.0
+Plugin,404113101,3,A,Accessibility,5.0
+Grasshopper,404113101,2,B,Accessibility,6.0
+Hybrid,404113101,1,B,Accessibility,9.0
+Plugin,404113101,3,B,Accessibility,6.0
+Grasshopper,303221202,3,A,Accessibility,9.0
+Hybrid,303221202,2,A,Accessibility,9.0
+Plugin,303221202,1,A,Accessibility,8.0
+Grasshopper,303221202,3,B,Accessibility,7.0
+Hybrid,303221202,2,B,Accessibility,8.0
+Plugin,303221202,1,B,Accessibility,9.0
+Grasshopper,304420003,1,A,Accessibility,9.0
+Hybrid,304420003,2,A,Accessibility,7.0
+Plugin,304420003,3,A,Accessibility,10.0
+Grasshopper,304420003,1,B,Accessibility,8.0
+Hybrid,304420003,2,B,Accessibility,9.0
+Plugin,304420003,3,B,Accessibility,10.0
+Grasshopper,404113001,3,A,Accessibility,9.0
+Hybrid,404113001,1,A,Accessibility,7.0
+Plugin,404113001,2,A,Accessibility,9.0
+Grasshopper,404113001,3,B,Accessibility,8.0
+Hybrid,404113001,1,B,Accessibility,6.0
+Plugin,404113001,2,B,Accessibility,7.0
+Grasshopper,324332103,2,A,Accessibility,7.0
+Hybrid,324332103,3,A,Accessibility,10.0
+Plugin,324332103,1,A,Accessibility,8.0
+Grasshopper,324332103,2,B,Accessibility,10.0
+Hybrid,324332103,3,B,Accessibility,10.0
+Plugin,324332103,1,B,Accessibility,3.0
+Grasshopper,505122002,1,A,Accessibility,9.0
+Hybrid,505122002,3,A,Accessibility,7.0
+Plugin,505122002,2,A,Accessibility,8.0
+Grasshopper,505122002,1,B,Accessibility,9.0
+Hybrid,505122002,3,B,Accessibility,7.0
+Plugin,505122002,2,B,Accessibility,9.0
+Grasshopper,304223302,2,A,Accessibility,10.0
+Hybrid,304223302,1,A,Accessibility,10.0
+Plugin,304223302,3,A,Accessibility,10.0
+Grasshopper,304223302,2,B,Accessibility,10.0
+Hybrid,304223302,1,B,Accessibility,10.0
+Plugin,304223302,3,B,Accessibility,10.0
+Grasshopper,303120402,3,A,Accessibility,9.0
+Hybrid,303120402,2,A,Accessibility,7.0
+Plugin,303120402,1,A,Accessibility,5.0
+Grasshopper,303120402,3,B,Accessibility,9.0
+Hybrid,303120402,2,B,Accessibility,7.0
+Plugin,303120402,1,B,Accessibility,4.0
+Grasshopper,323341324,1,A,Accessibility,9.0
+Hybrid,323341324,2,A,Accessibility,9.0
+Plugin,323341324,3,A,Accessibility,6.0
+Grasshopper,323341324,1,B,Accessibility,9.0
+Hybrid,323341324,2,B,Accessibility,9.0
+Plugin,323341324,3,B,Accessibility,9.0
+Grasshopper,404223002,3,A,Accessibility,6.0
+Hybrid,404223002,1,A,Accessibility,8.0
+Plugin,404223002,2,A,Accessibility,7.0
+Grasshopper,404223002,3,B,Accessibility,7.0
+Hybrid,404223002,1,B,Accessibility,9.0
+Plugin,404223002,2,B,Accessibility,7.0
+Grasshopper,303112001,1,A,Comprehension,9.0
+Hybrid,303112001,2,A,Comprehension,9.0
+Plugin,303112001,3,A,Comprehension,8.0
+Grasshopper,303112001,1,B,Comprehension,
+Hybrid,303112001,2,B,Comprehension,
+Plugin,303112001,3,B,Comprehension,
+Grasshopper,404000100,3,A,Comprehension,10.0
+Hybrid,404000100,1,A,Comprehension,10.0
+Plugin,404000100,2,A,Comprehension,10.0
+Grasshopper,404000100,3,B,Comprehension,10.0
+Hybrid,404000100,1,B,Comprehension,6.0
+Plugin,404000100,2,B,Comprehension,5.0
+Grasshopper,404223002,2,A,Comprehension,10.0
+Hybrid,404223002,3,A,Comprehension,8.0
+Plugin,404223002,1,A,Comprehension,9.0
+Grasshopper,404223002,2,B,Comprehension,10.0
+Hybrid,404223002,3,B,Comprehension,8.0
+Plugin,404223002,1,B,Comprehension,8.0
+Grasshopper,303334003,1,A,Comprehension,6.0
+Hybrid,303334003,3,A,Comprehension,8.0
+Plugin,303334003,2,A,Comprehension,6.0
+Grasshopper,303334003,1,B,Comprehension,8.0
+Hybrid,303334003,3,B,Comprehension,7.0
+Plugin,303334003,2,B,Comprehension,6.0
+Grasshopper,404113101,2,A,Comprehension,8.0
+Hybrid,404113101,1,A,Comprehension,6.0
+Plugin,404113101,3,A,Comprehension,6.0
+Grasshopper,404113101,2,B,Comprehension,8.0
+Hybrid,404113101,1,B,Comprehension,5.0
+Plugin,404113101,3,B,Comprehension,6.0
+Grasshopper,303221202,3,A,Comprehension,7.0
+Hybrid,303221202,2,A,Comprehension,6.0
+Plugin,303221202,1,A,Comprehension,7.0
+Grasshopper,303221202,3,B,Comprehension,7.0
+Hybrid,303221202,2,B,Comprehension,8.0
+Plugin,303221202,1,B,Comprehension,7.0
+Grasshopper,304420003,1,A,Comprehension,9.0
+Hybrid,304420003,2,A,Comprehension,9.0
+Plugin,304420003,3,A,Comprehension,10.0
+Grasshopper,304420003,1,B,Comprehension,8.0
+Hybrid,304420003,2,B,Comprehension,9.0
+Plugin,304420003,3,B,Comprehension,10.0
+Grasshopper,404113001,3,A,Comprehension,9.0
+Hybrid,404113001,1,A,Comprehension,9.0
+Plugin,404113001,2,A,Comprehension,9.0
+Grasshopper,404113001,3,B,Comprehension,8.0
+Hybrid,404113001,1,B,Comprehension,8.0
+Plugin,404113001,2,B,Comprehension,7.0
+Grasshopper,324332103,2,A,Comprehension,10.0
+Hybrid,324332103,3,A,Comprehension,8.0
+Plugin,324332103,1,A,Comprehension,4.0
+Grasshopper,324332103,2,B,Comprehension,5.0
+Hybrid,324332103,3,B,Comprehension,10.0
+Plugin,324332103,1,B,Comprehension,4.0
+Grasshopper,505122002,1,A,Comprehension,10.0
+Hybrid,505122002,3,A,Comprehension,8.0
+Plugin,505122002,2,A,Comprehension,10.0
+Grasshopper,505122002,1,B,Comprehension,10.0
+Hybrid,505122002,3,B,Comprehension,9.0
+Plugin,505122002,2,B,Comprehension,10.0
+Grasshopper,304223302,2,A,Comprehension,7.0
+Hybrid,304223302,1,A,Comprehension,4.0
+Plugin,304223302,3,A,Comprehension,8.0
+Grasshopper,304223302,2,B,Comprehension,8.0
+Hybrid,304223302,1,B,Comprehension,7.0
+Plugin,304223302,3,B,Comprehension,9.0
+Grasshopper,303120402,3,A,Comprehension,8.0
+Hybrid,303120402,2,A,Comprehension,9.0
+Plugin,303120402,1,A,Comprehension,8.0
+Grasshopper,303120402,3,B,Comprehension,9.0
+Hybrid,303120402,2,B,Comprehension,8.0
+Plugin,303120402,1,B,Comprehension,4.0
+Grasshopper,323341324,1,A,Comprehension,7.0
+Hybrid,323341324,2,A,Comprehension,8.0
+Plugin,323341324,3,A,Comprehension,10.0
+Grasshopper,323341324,1,B,Comprehension,10.0
+Hybrid,323341324,2,B,Comprehension,9.0
+Plugin,323341324,3,B,Comprehension,10.0
+Grasshopper,404223002,3,A,Comprehension,8.0
+Hybrid,404223002,1,A,Comprehension,8.0
+Plugin,404223002,2,A,Comprehension,8.0
+Grasshopper,404223002,3,B,Comprehension,6.0
+Hybrid,404223002,1,B,Comprehension,9.0
+Plugin,404223002,2,B,Comprehension,8.0
+Grasshopper,303112001,1,A,Ease of Use,9.0
+Hybrid,303112001,2,A,Ease of Use,10.0
+Plugin,303112001,3,A,Ease of Use,7.0
+Grasshopper,303112001,1,B,Ease of Use,
+Hybrid,303112001,2,B,Ease of Use,
+Plugin,303112001,3,B,Ease of Use,
+Grasshopper,404000100,3,A,Ease of Use,8.0
+Hybrid,404000100,1,A,Ease of Use,8.0
+Plugin,404000100,2,A,Ease of Use,10.0
+Grasshopper,404000100,3,B,Ease of Use,8.0
+Hybrid,404000100,1,B,Ease of Use,10.0
+Plugin,404000100,2,B,Ease of Use,7.0
+Grasshopper,404223002,2,A,Ease of Use,8.0
+Hybrid,404223002,3,A,Ease of Use,5.0
+Plugin,404223002,1,A,Ease of Use,8.0
+Grasshopper,404223002,2,B,Ease of Use,9.0
+Hybrid,404223002,3,B,Ease of Use,5.0
+Plugin,404223002,1,B,Ease of Use,9.0
+Grasshopper,303334003,1,A,Ease of Use,8.0
+Hybrid,303334003,3,A,Ease of Use,6.0
+Plugin,303334003,2,A,Ease of Use,7.0
+Grasshopper,303334003,1,B,Ease of Use,8.0
+Hybrid,303334003,3,B,Ease of Use,5.0
+Plugin,303334003,2,B,Ease of Use,6.0
+Grasshopper,404113101,2,A,Ease of Use,6.0
+Hybrid,404113101,1,A,Ease of Use,6.0
+Plugin,404113101,3,A,Ease of Use,8.0
+Grasshopper,404113101,2,B,Ease of Use,6.0
+Hybrid,404113101,1,B,Ease of Use,6.0
+Plugin,404113101,3,B,Ease of Use,9.0
+Grasshopper,303221202,3,A,Ease of Use,7.0
+Hybrid,303221202,2,A,Ease of Use,7.0
+Plugin,303221202,1,A,Ease of Use,10.0
+Grasshopper,303221202,3,B,Ease of Use,6.0
+Hybrid,303221202,2,B,Ease of Use,8.0
+Plugin,303221202,1,B,Ease of Use,6.0
+Grasshopper,304420003,1,A,Ease of Use,8.0
+Hybrid,304420003,2,A,Ease of Use,9.0
+Plugin,304420003,3,A,Ease of Use,10.0
+Grasshopper,304420003,1,B,Ease of Use,8.0
+Hybrid,304420003,2,B,Ease of Use,7.0
+Plugin,304420003,3,B,Ease of Use,9.0
+Grasshopper,404113001,3,A,Ease of Use,9.0
+Hybrid,404113001,1,A,Ease of Use,8.0
+Plugin,404113001,2,A,Ease of Use,8.0
+Grasshopper,404113001,3,B,Ease of Use,8.0
+Hybrid,404113001,1,B,Ease of Use,7.0
+Plugin,404113001,2,B,Ease of Use,9.0
+Grasshopper,324332103,2,A,Ease of Use,10.0
+Hybrid,324332103,3,A,Ease of Use,5.0
+Plugin,324332103,1,A,Ease of Use,8.0
+Grasshopper,324332103,2,B,Ease of Use,10.0
+Hybrid,324332103,3,B,Ease of Use,3.0
+Plugin,324332103,1,B,Ease of Use,10.0
+Grasshopper,505122002,1,A,Ease of Use,8.0
+Hybrid,505122002,3,A,Ease of Use,7.0
+Plugin,505122002,2,A,Ease of Use,9.0
+Grasshopper,505122002,1,B,Ease of Use,9.0
+Hybrid,505122002,3,B,Ease of Use,7.0
+Plugin,505122002,2,B,Ease of Use,9.0
+Grasshopper,304223302,2,A,Ease of Use,9.0
+Hybrid,304223302,1,A,Ease of Use,9.0
+Plugin,304223302,3,A,Ease of Use,10.0
+Grasshopper,304223302,2,B,Ease of Use,9.0
+Hybrid,304223302,1,B,Ease of Use,10.0
+Plugin,304223302,3,B,Ease of Use,10.0
+Grasshopper,303120402,3,A,Ease of Use,7.0
+Hybrid,303120402,2,A,Ease of Use,9.0
+Plugin,303120402,1,A,Ease of Use,8.0
+Grasshopper,303120402,3,B,Ease of Use,9.0
+Hybrid,303120402,2,B,Ease of Use,8.0
+Plugin,303120402,1,B,Ease of Use,3.0
+Grasshopper,323341324,1,A,Ease of Use,8.0
+Hybrid,323341324,2,A,Ease of Use,7.0
+Plugin,323341324,3,A,Ease of Use,7.0
+Grasshopper,323341324,1,B,Ease of Use,9.0
+Hybrid,323341324,2,B,Ease of Use,8.0
+Plugin,323341324,3,B,Ease of Use,7.0
+Grasshopper,404223002,3,A,Ease of Use,7.0
+Hybrid,404223002,1,A,Ease of Use,8.0
+Plugin,404223002,2,A,Ease of Use,8.0
+Grasshopper,404223002,3,B,Ease of Use,7.0
+Hybrid,404223002,1,B,Ease of Use,9.0
+Plugin,404223002,2,B,Ease of Use,7.0
+Grasshopper,303112001,1,A,Usability,10.0
+Hybrid,303112001,2,A,Usability,10.0
+Plugin,303112001,3,A,Usability,10.0
+Grasshopper,303112001,1,B,Usability,
+Hybrid,303112001,2,B,Usability,
+Plugin,303112001,3,B,Usability,
+Grasshopper,404000100,3,A,Usability,7.0
+Hybrid,404000100,1,A,Usability,10.0
+Plugin,404000100,2,A,Usability,10.0
+Grasshopper,404000100,3,B,Usability,7.0
+Hybrid,404000100,1,B,Usability,10.0
+Plugin,404000100,2,B,Usability,9.0
+Grasshopper,404223002,2,A,Usability,8.0
+Hybrid,404223002,3,A,Usability,6.0
+Plugin,404223002,1,A,Usability,9.0
+Grasshopper,404223002,2,B,Usability,9.0
+Hybrid,404223002,3,B,Usability,6.0
+Plugin,404223002,1,B,Usability,9.0
+Grasshopper,303334003,1,A,Usability,9.0
+Hybrid,303334003,3,A,Usability,8.0
+Plugin,303334003,2,A,Usability,8.0
+Grasshopper,303334003,1,B,Usability,9.0
+Hybrid,303334003,3,B,Usability,7.0
+Plugin,303334003,2,B,Usability,8.0
+Grasshopper,404113101,2,A,Usability,7.0
+Hybrid,404113101,1,A,Usability,9.0
+Plugin,404113101,3,A,Usability,8.0
+Grasshopper,404113101,2,B,Usability,7.0
+Hybrid,404113101,1,B,Usability,5.0
+Plugin,404113101,3,B,Usability,9.0
+Grasshopper,303221202,3,A,Usability,2.0
+Hybrid,303221202,2,A,Usability,4.0
+Plugin,303221202,1,A,Usability,3.0
+Grasshopper,303221202,3,B,Usability,2.0
+Hybrid,303221202,2,B,Usability,4.0
+Plugin,303221202,1,B,Usability,4.0
+Grasshopper,304420003,1,A,Usability,9.0
+Hybrid,304420003,2,A,Usability,10.0
+Plugin,304420003,3,A,Usability,10.0
+Grasshopper,304420003,1,B,Usability,8.0
+Hybrid,304420003,2,B,Usability,7.0
+Plugin,304420003,3,B,Usability,10.0
+Grasshopper,404113001,3,A,Usability,8.0
+Hybrid,404113001,1,A,Usability,7.0
+Plugin,404113001,2,A,Usability,8.0
+Grasshopper,404113001,3,B,Usability,8.0
+Hybrid,404113001,1,B,Usability,6.0
+Plugin,404113001,2,B,Usability,8.0
+Grasshopper,324332103,2,A,Usability,10.0
+Hybrid,324332103,3,A,Usability,10.0
+Plugin,324332103,1,A,Usability,5.0
+Grasshopper,324332103,2,B,Usability,10.0
+Hybrid,324332103,3,B,Usability,3.0
+Plugin,324332103,1,B,Usability,3.0
+Grasshopper,505122002,1,A,Usability,8.0
+Hybrid,505122002,3,A,Usability,8.0
+Plugin,505122002,2,A,Usability,9.0
+Grasshopper,505122002,1,B,Usability,10.0
+Hybrid,505122002,3,B,Usability,7.0
+Plugin,505122002,2,B,Usability,9.0
+Grasshopper,304223302,2,A,Usability,9.0
+Hybrid,304223302,1,A,Usability,8.0
+Plugin,304223302,3,A,Usability,9.0
+Grasshopper,304223302,2,B,Usability,8.0
+Hybrid,304223302,1,B,Usability,9.0
+Plugin,304223302,3,B,Usability,9.0
+Grasshopper,303120402,3,A,Usability,10.0
+Hybrid,303120402,2,A,Usability,9.0
+Plugin,303120402,1,A,Usability,10.0
+Grasshopper,303120402,3,B,Usability,9.0
+Hybrid,303120402,2,B,Usability,5.0
+Plugin,303120402,1,B,Usability,4.0
+Grasshopper,323341324,1,A,Usability,10.0
+Hybrid,323341324,2,A,Usability,10.0
+Plugin,323341324,3,A,Usability,10.0
+Grasshopper,323341324,1,B,Usability,8.0
+Hybrid,323341324,2,B,Usability,9.0
+Plugin,323341324,3,B,Usability,10.0
+Grasshopper,404223002,3,A,Usability,4.0
+Hybrid,404223002,1,A,Usability,6.0
+Plugin,404223002,2,A,Usability,5.0
+Grasshopper,404223002,3,B,Usability,5.0
+Hybrid,404223002,1,B,Usability,8.0
+Plugin,404223002,2,B,Usability,6.0
+Grasshopper,303112001,1,A,Satisfaction,8.0
+Hybrid,303112001,2,A,Satisfaction,8.0
+Plugin,303112001,3,A,Satisfaction,8.0
+Grasshopper,303112001,1,B,Satisfaction,
+Hybrid,303112001,2,B,Satisfaction,
+Plugin,303112001,3,B,Satisfaction,
+Grasshopper,404000100,3,A,Satisfaction,8.0
+Hybrid,404000100,1,A,Satisfaction,7.0
+Plugin,404000100,2,A,Satisfaction,8.0
+Grasshopper,404000100,3,B,Satisfaction,8.0
+Hybrid,404000100,1,B,Satisfaction,7.0
+Plugin,404000100,2,B,Satisfaction,8.0
+Grasshopper,404223002,2,A,Satisfaction,9.0
+Hybrid,404223002,3,A,Satisfaction,7.0
+Plugin,404223002,1,A,Satisfaction,7.0
+Grasshopper,404223002,2,B,Satisfaction,9.0
+Hybrid,404223002,3,B,Satisfaction,6.0
+Plugin,404223002,1,B,Satisfaction,8.0
+Grasshopper,303334003,1,A,Satisfaction,9.0
+Hybrid,303334003,3,A,Satisfaction,6.0
+Plugin,303334003,2,A,Satisfaction,9.0
+Grasshopper,303334003,1,B,Satisfaction,9.0
+Hybrid,303334003,3,B,Satisfaction,6.0
+Plugin,303334003,2,B,Satisfaction,8.0
+Grasshopper,404113101,2,A,Satisfaction,7.0
+Hybrid,404113101,1,A,Satisfaction,8.0
+Plugin,404113101,3,A,Satisfaction,8.0
+Grasshopper,404113101,2,B,Satisfaction,8.0
+Hybrid,404113101,1,B,Satisfaction,8.0
+Plugin,404113101,3,B,Satisfaction,8.0
+Grasshopper,303221202,3,A,Satisfaction,7.0
+Hybrid,303221202,2,A,Satisfaction,8.0
+Plugin,303221202,1,A,Satisfaction,8.0
+Grasshopper,303221202,3,B,Satisfaction,8.0
+Hybrid,303221202,2,B,Satisfaction,8.0
+Plugin,303221202,1,B,Satisfaction,8.0
+Grasshopper,304420003,1,A,Satisfaction,9.0
+Hybrid,304420003,2,A,Satisfaction,9.0
+Plugin,304420003,3,A,Satisfaction,10.0
+Grasshopper,304420003,1,B,Satisfaction,10.0
+Hybrid,304420003,2,B,Satisfaction,8.0
+Plugin,304420003,3,B,Satisfaction,9.0
+Grasshopper,404113001,3,A,Satisfaction,8.0
+Hybrid,404113001,1,A,Satisfaction,5.0
+Plugin,404113001,2,A,Satisfaction,7.0
+Grasshopper,404113001,3,B,Satisfaction,7.0
+Hybrid,404113001,1,B,Satisfaction,6.0
+Plugin,404113001,2,B,Satisfaction,8.0
+Grasshopper,324332103,2,A,Satisfaction,3.0
+Hybrid,324332103,3,A,Satisfaction,3.0
+Plugin,324332103,1,A,Satisfaction,3.0
+Grasshopper,324332103,2,B,Satisfaction,8.0
+Hybrid,324332103,3,B,Satisfaction,7.0
+Plugin,324332103,1,B,Satisfaction,4.0
+Grasshopper,505122002,1,A,Satisfaction,9.0
+Hybrid,505122002,3,A,Satisfaction,7.0
+Plugin,505122002,2,A,Satisfaction,10.0
+Grasshopper,505122002,1,B,Satisfaction,9.0
+Hybrid,505122002,3,B,Satisfaction,7.0
+Plugin,505122002,2,B,Satisfaction,9.0
+Grasshopper,304223302,2,A,Satisfaction,9.0
+Hybrid,304223302,1,A,Satisfaction,9.0
+Plugin,304223302,3,A,Satisfaction,9.0
+Grasshopper,304223302,2,B,Satisfaction,8.0
+Hybrid,304223302,1,B,Satisfaction,9.0
+Plugin,304223302,3,B,Satisfaction,9.0
+Grasshopper,303120402,3,A,Satisfaction,9.0
+Hybrid,303120402,2,A,Satisfaction,7.0
+Plugin,303120402,1,A,Satisfaction,9.0
+Grasshopper,303120402,3,B,Satisfaction,7.0
+Hybrid,303120402,2,B,Satisfaction,7.0
+Plugin,303120402,1,B,Satisfaction,6.0
+Grasshopper,323341324,1,A,Satisfaction,8.0
+Hybrid,323341324,2,A,Satisfaction,7.0
+Plugin,323341324,3,A,Satisfaction,9.0
+Grasshopper,323341324,1,B,Satisfaction,8.0
+Hybrid,323341324,2,B,Satisfaction,8.0
+Plugin,323341324,3,B,Satisfaction,9.0
+Grasshopper,404223002,3,A,Satisfaction,7.0
+Hybrid,404223002,1,A,Satisfaction,9.0
+Plugin,404223002,2,A,Satisfaction,7.0
+Grasshopper,404223002,3,B,Satisfaction,7.0
+Hybrid,404223002,1,B,Satisfaction,9.0
+Plugin,404223002,2,B,Satisfaction,7.0

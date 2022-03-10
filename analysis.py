@@ -14,8 +14,6 @@ _color = sns.mpl_palette('Paired', 5)
 _color2 = sns.mpl_palette('RdYlBu_r', 3)
 
 
-# todo : Split Data Engineering and data analysis
-
 def global_analysis(df1, study_columns, _title):
     df = df1.droplevel(['Order']).groupby(level=['Name', 'Level', 'Type'], sort=False).sum()
     fig = plt.figure(figsize=(24, 8), facecolor="#fefdfd")
@@ -147,14 +145,14 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     ax14 = fig.add_subplot(gs[2:3, 6:9], sharey=ax12)
     ax15 = fig.add_subplot(gs[3:4, 6:9])
     result = df.reset_index('Level', drop=False)
-    result['Level'] = result['Level'].map(lambda x: x[b])
+    result['Level'] = result['Level'].map(lambda _x: lvl(_x, b))
     result.sort_values('Level', axis=0, inplace=True)
     if 'Time' in result.columns:
         result['Time'] = result['Time'] / 60
         if 'Time' not in keep_list:
             result = result.drop(['Time'], axis=1)
     context_feedback = feedback_df[feedback_df['Type'] == _type[a - 1]]
-    context_feedback['Level'] = context_feedback['Level'].map(lambda x: x[b])
+    context_feedback['Level'] = context_feedback['Level'].map(lambda _x: lvl(_x, b))
     ax = [ax1, ax2, ax3, ax4, ax6, ax7, ax8, ax9, ax10]
 
     for i in range(3):
@@ -165,7 +163,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     ax7.set_yticklabels("")
     # matplotlib.rcParams.update(matplotlib.rcParamsDefault)
     df = time_df.xs(_type[a - 1], level='Type').reset_index('Level', drop=False)
-    df['Level'] = df['Level'].map(lambda x: int(x[b]))
+    df['Level'] = df['Level'].map(lambda _x: lvl(_x, b))
     df0level = df.xs(1, level='Order')['Level'].unique()
     df1level = df.xs(2, level='Order')['Level'].unique()
     df2level = df.xs(3, level='Order')['Level'].unique()
@@ -360,8 +358,7 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
             _df_ = _df.xs(facade + 2, level='Object')
 
             def mapper(self):
-                return (self * ratio[facade]) + cum_ratio[facade] * 10
-
+                return (int(self) * ratio[facade]) + cum_ratio[facade] * 10
             _df_ = _df_.rename(columns=mapper)
             level_df = _df_.xs(lvl, level='Level').melt()
             sns.regplot(x='variable', y='value', data=level_df, color=_color[lvl], ax=ax, order=regression_order,
@@ -378,6 +375,10 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
 def convert_subject_level(n):
     _level = ["Aucune expérience", "Novice", "Limité", "Habitué", "Avancé", "Expert"]
     return _level.index(n)
+
+
+def lvl(self, b):
+    return int(str(self)[b])
 
 
 def profile(n):
@@ -433,7 +434,7 @@ def double_plot(df, clname, ax1, ax2, title, color_list, _level, fn, _color='#bd
 
 def choose_level(_df, b):
     _df = _df.reset_index(level='Level')
-    _df['Level'] = _df['Level'].map(lambda x: int(x[b]))
+    _df['Level'] = _df['Level'].map(lambda x: int(str(x)[b]))
     level_length = _df['Level'].value_counts().sort_index()
     _df.set_index(['Level'], append=True, inplace=True)
     _df.sort_index(axis=0, level='Level', inplace=True)
@@ -519,7 +520,7 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     sns.barplot(x='variable', y='value', hue='Level', palette=color_set, data=level_plot_df, ax=ax2, errwidth=0.5)
 
     context_feedback = feedback_df[feedback_df['Type'] == _type[a - 1]]
-    context_feedback['Level'] = context_feedback['Level'].map(lambda _x: _x[b])
+    context_feedback['Level'] = context_feedback['Level'].map(lambda _x: lvl(_x, b))
     plot_feedback(ax14, None, context_feedback, _color)
     ax14.set_frame_on(False)
 
@@ -528,7 +529,7 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     double_plot(it, study_columns[2], ax12, ax4, 'Iterations/Minute', color_set, 'Level', (lambda _x: _x), _color)
 
     df = time_df.xs(_type[a - 1], level='Type').reset_index('Level', drop=False)
-    df['Level'] = df['Level'].map(lambda _x: int(_x[b]))
+    df['Level'] = df['Level'].map(lambda _x: lvl(_x, b))
     df_level = df['Level'].unique()
     df.set_index(['Level'], append=True, inplace=True)
     time_level_plot(df, df_level, None, ax13, 3, time_ratio, _color)
