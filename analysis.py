@@ -10,27 +10,37 @@ from matplotlib.gridspec import GridSpec
 
 _type = ['Grasshopper', 'Hybrid', 'Plugin']
 niv = ['No experience', 'Novice', 'Limited', 'Basic', 'Advanced', 'Expert']
-_color = sns.mpl_palette('Paired', 5)
-_color2 = sns.mpl_palette('RdYlBu_r', 3)
+Software = ['Autocad', 'Blender', 'SketchUp', 'Rhino', 'Grasshopper', 'Revit',
+            'Archicad', '3dsMax', 'Average', 'Modeling', 'Bim']
+_color = sns.mpl_palette('Paired', 6)
+_color2 = sns.mpl_palette('RdYlBu', 3)
 
 
-def global_analysis(df1, study_columns, _title):
+def global_analysis(df1, time_df, feedback_df, study_columns, _title, survey='A'):
+    #df = df.xs(_type[a], level='Type')
+    feedback_df = feedback_df[feedback_df['Survey'] == survey]
+    it2 = df1.droplevel(['Level']).groupby(level=['Name', 'Order', 'Type'], sort=False).sum()
+    time_ratio = (df1.drop(0, level='Order').droplevel(['Object','Level','Order'])['Time'] /
+                  it2.droplevel('Order').loc[df1.drop(0, level='Order').droplevel(['Order', 'Level']).apply((lambda _x: _x.index.values), axis=0)['Time'].values]['Time'])
+    time_ratio = pd.DataFrame(time_ratio.values, index=df1.drop(0, level='Order').droplevel(['Level','Order'])['Time'].index)
     df = df1.droplevel(['Order']).groupby(level=['Name', 'Level', 'Type'], sort=False).sum()
-    fig = plt.figure(figsize=(24, 8), facecolor="#fefdfd")
+    fig = plt.figure(figsize=(24, 14), facecolor="#fefdfd")
     fig.suptitle(_title + ': Total', x=0.5, y=0.92, fontsize=20)
-    gs = GridSpec(4, 40, figure=fig, wspace=3)
-    ax1 = fig.add_subplot(gs[1:3, :4])
-    ax3 = fig.add_subplot(gs[1:3, 5:9])
-    ax4 = fig.add_subplot(gs[1:3, 10:14])
-    ax9 = fig.add_subplot(gs[3:, 15:])
-    ax2 = fig.add_subplot(gs[:3, 15:], sharex=ax9)
-    ax5 = fig.add_subplot(gs[3:, 15:])
-    ax6 = fig.add_subplot(gs[3:, :4])
-    ax7 = fig.add_subplot(gs[3:, 5:9])
-    ax8 = fig.add_subplot(gs[3:, 10:14])
-    ax10 = fig.add_subplot(gs[:1, :4])
-    ax11 = fig.add_subplot(gs[:1, 5:9])
-    ax12 = fig.add_subplot(gs[:1, 10:14])
+    gs = GridSpec(6, 40, figure=fig, wspace=3)
+    ax1 = fig.add_subplot(gs[3:5, :4])
+    ax3 = fig.add_subplot(gs[3:5, 5:9])
+    ax4 = fig.add_subplot(gs[3:5, 10:14])
+    ax9 = fig.add_subplot(gs[5:6, 15:])
+    ax2 = fig.add_subplot(gs[2:5, 15:], sharex=ax9)
+    ax5 = fig.add_subplot(gs[5:6, 15:])
+    ax6 = fig.add_subplot(gs[5:6, :4])
+    ax7 = fig.add_subplot(gs[5:6, 5:9])
+    ax8 = fig.add_subplot(gs[5:6, 10:14])
+    ax10 = fig.add_subplot(gs[2:3, :4])
+    ax11 = fig.add_subplot(gs[2:3, 5:9])
+    ax12 = fig.add_subplot(gs[2:3, 10:14])
+    ax13 = fig.add_subplot(gs[:2, 15:])
+    ax14 = fig.add_subplot(gs[:2, :15])
 
     a = (df.drop(['Average', 'Standard Deviation', 'Tot'], axis=0, level='Type'))
 
@@ -78,6 +88,19 @@ def global_analysis(df1, study_columns, _title):
     ax8.set_yticklabels("")
 
     ###
+    df = time_df.reset_index('Type', drop=False)
+    df_level = ['Grasshopper', 'Hybrid', 'Plugin']
+    df.set_index(['Type'], append=True, inplace=True)
+    time_level_plot(df, df_level, None, ax13, 3, time_ratio, _color3, 'Type')
+    ax13.set_frame_on(False)
+    ax13.set_ylabel(_title + '/minute')
+    ###
+    context_feedback = feedback_df
+    #context_feedback['Level'] = context_feedback['Level'].map(lambda _x: lvl(_x, b))
+
+    plot_feedback(ax14, None, context_feedback, _color3, 'Type')
+    ax14.set_frame_on(False)
+    ###
     av_gh = a.xs('Grasshopper', level='Type').drop(study_columns, axis=1).mean()
     av_gh.name = 'GH'
     av_hyb = a.xs('Hybrid', level='Type').drop(study_columns, axis=1).mean()
@@ -111,7 +134,9 @@ def global_analysis(df1, study_columns, _title):
     return 1
 
 
-def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
+def order_analysis(a, df, time_df, feedback_df, keep_list, sw, title, survey='B', rorder=3):
+    feedback_df2=feedback_df[feedback_df['Survey']==survey]
+    b=Software.index(sw)
     matplotlib.rcParams['axes.autolimit_mode'] = 'round_numbers'
     matplotlib.rcParams['axes.xmargin'] = 0
     matplotlib.rcParams['axes.ymargin'] = 0
@@ -127,7 +152,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     time_ratio = pd.DataFrame(time_ratio.values, index=df2['Time'].index)
     fig = plt.figure(figsize=(24, 12), facecolor="#fefdfd")
     _title = str(_type[a - 1])
-    fig.suptitle('Number of ' + title + ": " + _title, y=0.94, fontsize=20)
+    fig.suptitle(_title + ': '+'Number of ' + title + " by " + sw + ' level', y=0.94, fontsize=20)
     gs = GridSpec(4, 11, figure=fig, wspace=0.4, hspace=0.2)
     ax1 = fig.add_subplot(gs[:1, 3:6])
     ax2 = fig.add_subplot(gs[1:2, 3:6], sharey=ax1)
@@ -151,7 +176,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
         result['Time'] = result['Time'] / 60
         if 'Time' not in keep_list:
             result = result.drop(['Time'], axis=1)
-    context_feedback = feedback_df[feedback_df['Type'] == _type[a - 1]]
+    context_feedback = feedback_df2[feedback_df2['Type'] == _type[a - 1]]
     context_feedback['Level'] = context_feedback['Level'].map(lambda _x: lvl(_x, b))
     ax = [ax1, ax2, ax3, ax4, ax6, ax7, ax8, ax9, ax10]
 
@@ -171,12 +196,12 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     df.set_index(['Level'], append=True, inplace=True)
     ax = [ax12, ax13, ax14]
     for i in range(3):
-        time_level_plot(df, df_level, i, ax[i], 3, time_ratio, _color)
+        time_level_plot(df, df_level, i, ax[i], rorder, time_ratio, _color)
         ax[i].set_ylabel(title + '/minute', labelpad=1)
     df = df.droplevel('Level')
     for i in range(3):
         sns.regplot(x='variable', y='value', data=df.xs(i + 1, level='Order').melt().applymap(lambda x: int(x)),
-                    ax=ax15, order=3, x_estimator=np.mean, scatter=False, color=_color2[i], ci=None)
+                    ax=ax15, order=rorder, x_estimator=np.mean, scatter=False, color=_color2[i], ci=None)
     ax15.tick_params(axis='y', pad=-1)
     ax15.set_ylabel(None)
     ax15.set_xlabel(None)
@@ -185,7 +210,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, b, title):
     level_plot = level_plot.melt(id_vars='Order')
     sns.barplot(x='variable', y='value', data=level_plot, hue='Order', palette='RdYlBu_r', ax=ax5,
                 errwidth=0.5)  # , dodge=0.2)
-    sns.barplot(x='variable', y='value', data=context_feedback[context_feedback['Survey'] == 'B'], hue='Order',
+    sns.barplot(x='variable', y='value', data=context_feedback[context_feedback['Survey'] == survey], hue='Order',
                 palette='RdYlBu_r', ax=ax11, errwidth=0.5)
     ax11.set_ylabel(None)
     ax11.get_legend().remove()
@@ -261,20 +286,30 @@ def split_profile(_df, _imp, _profile):
     return prof1.T, prof2.T, prof3.T
 
 
-def plot_feedback(ax, a, _feedback_df, _color):
+def plot_feedback(ax, a, _feedback_df, _color, _level='Level'):
     if a is None:
         pass
     else:
         _feedback_df = _feedback_df[_feedback_df['Order'] == a]
-    _feedback_df.sort_values('Level', inplace=True)
-    colors = _feedback_df['Level'].map(lambda x: _color[int(x)])
-    _feedback_df['Level'] = _feedback_df['Level'].map(lambda x: niv[int(x)])
+    _feedback_df.sort_values(_level, inplace=True)
+    if _level == 'Level':
+        def mapper(self):
+            return niv[int(self)]
+        def color(self):
+            return _color[int(self)]
+    else:
+        def mapper(self):
+            return self
+        def color(self):
+            return _color[_type.index(self)]
+    colors = _feedback_df[_level].map(color)
+    _feedback_df[_level] = _feedback_df[_level].map(mapper)
 
     color_set = colors.drop_duplicates().to_list()
     ax.set_autoscaley_on(False)
     ax.set_ybound(0, 11)
-    _feedback_df = _feedback_df[_feedback_df['Survey'] == 'B']
-    sns.barplot(x='variable', y='value', data=_feedback_df, hue='Level', ci='sd',
+    #_feedback_df = _feedback_df[_feedback_df['Survey'] == 'B']
+    sns.barplot(x='variable', y='value', data=_feedback_df, hue=_level, ci='sd',
                 palette=color_set, ax=ax, errwidth=0.5)
     ax.set_ylabel(None)
     ax.set_xlabel(None)
@@ -340,7 +375,7 @@ def box_plot(ax, c, _r, keep_list, label):
     return
 
 
-def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_ratio, _color):
+def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_ratio, _color, _level='Level'):
     if order_choice is None:
         # _df = _df.droplevel('Order')
         level_list = df_level
@@ -353,22 +388,26 @@ def time_level_plot(_df, df_level, order_choice, ax, regression_order, _time_rat
     ratio = np.array([ratio_1, ratio_2, ratio_3])
     cum_ratio = np.cumsum(ratio)
     cum_ratio = cum_ratio - ratio
-    for lvl in level_list:
+    i=0
+    for _lvl in level_list:
+        if _level != 'Level':
+            _lvl_ = i
+        else:
+            _lvl_ = _lvl
         for facade in range(3):
             _df_ = _df.xs(facade + 2, level='Object')
-
             def mapper(self):
                 return (int(self) * ratio[facade]) + cum_ratio[facade] * 10
             _df_ = _df_.rename(columns=mapper)
-            level_df = _df_.xs(lvl, level='Level').melt()
-            sns.regplot(x='variable', y='value', data=level_df, color=_color[lvl], ax=ax, order=regression_order,
-                        x_estimator=np.mean, scatter=False, ci=None)
+            level_df = _df_.xs(_lvl, level=_level).melt()
+            sns.regplot(x='variable', y='value', data=level_df, color=_color[_lvl_], ax=ax, order=regression_order, scatter=False, ci=None)
+        i += 1
     ax.set_xticks(cum_ratio * 10 + ratio * 5)
     ax.set_xticklabels(['Facade 1', 'Facade 2', 'Facade 3'])
     ax.set_ybound(lower=0)
     ax.set_title("Rate/Time", loc="left", pad=-5)
     ax.set_xlabel(None)
-    ax.tick_params(axis='y', pad=-1)
+    ax.tick_params(axis='y', pad=1)
     return
 
 
@@ -400,7 +439,7 @@ def double_plot(df, clname, ax1, ax2, title, color_list, _level, fn, _color='#bd
     time = time.reset_index(level=_level)
     time['x'] = title
     ax1.margins(y=0.1)
-    r = sns.regplot(x=time[_level].map(fn), y=time[clname], ax=ax1, x_estimator=np.mean, order=2)
+    r = sns.regplot(x=time[_level].map(fn), y=time[clname], ax=ax1, x_estimator=np.mean, order=1)
     _markers = r.get_children()
     _markers[0].set_facecolors(color_list)
     _lines = r.get_lines()
@@ -441,7 +480,8 @@ def choose_level(_df, b):
     return _df, level_length
 
 
-def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.175):
+def context_analysis(a, df, time_df, feedback_df, study_columns, sw='Tot', title='Title', y2=0.175, rorder=3):
+    b=Software.index(sw)
     df = df.xs(_type[a], level='Type')
     it2 = df.groupby(level=['Name', 'Level', 'Order'], sort=False).sum()
     time_ratio = (df.droplevel('Object')['Time'] /
@@ -532,10 +572,10 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     df['Level'] = df['Level'].map(lambda _x: lvl(_x, b))
     df_level = df['Level'].unique()
     df.set_index(['Level'], append=True, inplace=True)
-    time_level_plot(df, df_level, None, ax13, 3, time_ratio, _color)
+    time_level_plot(df, df_level, None, ax13, rorder, time_ratio, _color)
     ax13.set_frame_on(False)
     ax13.set_ylabel(title + '/minute')
-    fig.suptitle('Number of ' + title + ": " + _Title, fontsize=20, y=0.92)
+    fig.suptitle(_Title+': ''Number of ' + title + " by " + sw + ' level', fontsize=20, y=0.92)
 
     x1 = 0.125
     x2 = 0.9
@@ -586,6 +626,8 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     fig.lines = line1, line2, line3, line4, line5, line6
     ax2.set_frame_on(False)
     ax2.set_xlabel(None)
+    ax2.legend(title=(sw+" level"),loc=1)
+    h,l = ax2.get_legend_handles_labels()
     ax2.tick_params(axis='y', tickdir='in')
     ax2.tick_params(axis='x', tickdir='out')
     ax5.tick_params(axis='x', tickdir='out', top=True)
@@ -595,4 +637,17 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, b, title, y2=0.
     ax12.set_frame_on(False)
     ax12.set_ylabel(None)
     ax12.set_xlabel(None)
+    fig2 = plt.figure(figsize=(13.2, 4), facecolor="#fefdfd",dpi=200);
+    axes = fig2.add_subplot();
+    time_level_plot(df, df_level, None, axes, rorder, time_ratio, _color)
+    axes.set_frame_on(False)
+    axes.legend(h,l,title=(sw+" level"),loc=1)
+    fig2.suptitle('Number of ' + title + ": " + _Title, fontsize=20, y=0.92)
+    axes.set_ylabel(title + '/minute')
+    plt.savefig('output/'+ title + '-' + _Title + '-' + 'rate-by' + sw + '.png');
+    plt.delaxes(axes);
+    plt.close(fig2);
+    plt.figure(fig);
     return 1
+
+#%%
