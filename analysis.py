@@ -8,10 +8,10 @@ import seaborn as sns
 from matplotlib import lines
 from matplotlib.gridspec import GridSpec
 
-_type = ['Grasshopper', 'Hybrid', 'Plugin']
+_type = ['Grasshopper', 'Hybrid', 'Plugin', 'Tot', 'Average']
 niv = ['No experience', 'Novice', 'Limited', 'Basic', 'Advanced', 'Expert']
 Software = ['Autocad', 'Blender', 'SketchUp', 'Rhino', 'Grasshopper', 'Revit',
-            'Archicad', '3dsMax', 'Average', 'Modeling', 'Bim']
+            'Archicad', '3dsMax', 'Average', 'Modeling', 'Bim', 'Rhino+GH']
 _color = sns.mpl_palette('Paired', 6)
 _color2 = sns.mpl_palette('RdYlBu', 3)
 
@@ -20,27 +20,27 @@ def global_analysis(df1, time_df, feedback_df, study_columns, _title, survey='A'
     #df = df.xs(_type[a], level='Type')
     feedback_df = feedback_df[feedback_df['Survey'] == survey]
     it2 = df1.droplevel(['Level']).groupby(level=['Name', 'Order', 'Type'], sort=False).sum()
-    time_ratio = (df1.drop(0, level='Order').droplevel(['Object','Level','Order'])['Time'] /
+    time_ratio = (df1.drop(0, level='Order').droplevel(['Object', 'Level', 'Order'])['Time'] /
                   it2.droplevel('Order').loc[df1.drop(0, level='Order').droplevel(['Order', 'Level']).apply((lambda _x: _x.index.values), axis=0)['Time'].values]['Time'])
     time_ratio = pd.DataFrame(time_ratio.values, index=df1.drop(0, level='Order').droplevel(['Level','Order'])['Time'].index)
     df = df1.droplevel(['Order']).groupby(level=['Name', 'Level', 'Type'], sort=False).sum()
     fig = plt.figure(figsize=(24, 14), facecolor="#fefdfd")
     fig.suptitle(_title + ': Total', x=0.5, y=0.92, fontsize=20)
-    gs = GridSpec(6, 40, figure=fig, wspace=3)
-    ax1 = fig.add_subplot(gs[3:5, :4])
-    ax3 = fig.add_subplot(gs[3:5, 5:9])
-    ax4 = fig.add_subplot(gs[3:5, 10:14])
-    ax9 = fig.add_subplot(gs[5:6, 15:])
-    ax2 = fig.add_subplot(gs[2:5, 15:], sharex=ax9)
-    ax5 = fig.add_subplot(gs[5:6, 15:])
-    ax6 = fig.add_subplot(gs[5:6, :4])
-    ax7 = fig.add_subplot(gs[5:6, 5:9])
-    ax8 = fig.add_subplot(gs[5:6, 10:14])
-    ax10 = fig.add_subplot(gs[2:3, :4])
-    ax11 = fig.add_subplot(gs[2:3, 5:9])
-    ax12 = fig.add_subplot(gs[2:3, 10:14])
+    gs = GridSpec(5, 40, figure=fig, wspace=3)
+    ax1 = fig.add_subplot(gs[2:4, :4])
+    ax3 = fig.add_subplot(gs[2:4, 5:9])
+    ax4 = fig.add_subplot(gs[2:4, 10:14])
+    ax9 = fig.add_subplot(gs[4:, 15:])
+    ax2 = fig.add_subplot(gs[2:4, 15:], sharex=ax9)
+    ax5 = fig.add_subplot(gs[4:, 15:])
+    ax6 = fig.add_subplot(gs[4:, :4])
+    ax7 = fig.add_subplot(gs[4:, 5:9])
+    ax8 = fig.add_subplot(gs[4:, 10:14])
+    ax10 = fig.add_subplot(gs[1:2, :4])
+    ax11 = fig.add_subplot(gs[1:2, 5:9])
+    ax12 = fig.add_subplot(gs[1:2, 10:14])
     ax13 = fig.add_subplot(gs[:2, 15:])
-    ax14 = fig.add_subplot(gs[:2, :15])
+    ax14 = fig.add_subplot(gs[:1, :15])
 
     a = (df.drop(['Average', 'Standard Deviation', 'Tot'], axis=0, level='Type'))
 
@@ -51,7 +51,7 @@ def global_analysis(df1, time_df, feedback_df, study_columns, _title, survey='A'
         if 'CV' in a.columns:
             a['CV'] = a.drop(['Max', 'Time', 'CV', 'Total'], axis=1).std(axis=1) / a.drop(
                 ['Max', 'Time', 'CV', 'Total'], axis=1).mean(axis=1)
-        if 'Iterations / Minute' in a.columns:
+        if 'Iterations / Minute' in study_columns:
             a['Iterations / Minute'] = a['Total'] / a['Time']
 
     a = a.droplevel(['Level'])
@@ -174,6 +174,8 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, sw, title, survey='B'
     result.sort_values('Level', axis=0, inplace=True)
     if 'Time' in result.columns:
         result['Time'] = result['Time'] / 60
+        if 'Iterations / Minute' in keep_list:
+            result['Iterations / Minute'] = result['Total'] / result['Time']
         if 'Time' not in keep_list:
             result = result.drop(['Time'], axis=1)
     context_feedback = feedback_df2[feedback_df2['Type'] == _type[a - 1]]
@@ -485,10 +487,12 @@ def context_analysis(a, df, time_df, feedback_df, study_columns, sw='Tot', title
     df = df.xs(_type[a], level='Type')
     it2 = df.groupby(level=['Name', 'Level', 'Order'], sort=False).sum()
     time_ratio = (df.droplevel('Object')['Time'] /
-                  it2.loc[df.drop(0, level='Order').apply((lambda _x: _x.index.values), axis=0)['Time'].values]['Time'])
+                  it2.loc[df.apply((lambda _x: _x.index.values), axis=0)['Time'].values]['Time'])
     time_ratio = pd.DataFrame(time_ratio.values, index=df['Time'].index)
     if 'Time' in it2.columns:
         it2['Time'] = it2['Time'] / 60
+        if 'Iterations / Minute' in study_columns:
+            it2['Iterations / Minute'] = (it2['Total'] / it2['Time']).round(0)
         if 'Time' not in study_columns:
             it2 = it2.drop(['Time'], axis=1)
     if 'Max' in it2.columns:
