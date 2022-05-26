@@ -755,14 +755,18 @@ def feedback(feedback_df, a, sw, survey='B', _level='Level'):
     fig = plt.figure(figsize=(12, 8), facecolor="#fefefe", dpi=200)
     ax = fig.add_subplot()
     if _level == 'Level':
-        ltitle=sw.lower()+' level '
+        ltitle=sw+' level '
     else:
         ltitle = _level
-    fig.suptitle('Survey results '+survey_order[l.index(survey)]+' by '+ ltitle, fontsize=16, y=0.92)
+    if a is None:
+        title_2='Survey results '
+    else:
+        title_2=_type[a]+' survey results '
+    fig.suptitle(title_2+survey_order[l.index(survey)]+' by ' + ltitle, fontsize=16, y=0.92)
     if a is not None:
         context_feedback = feedback_df[feedback_df['Type'] == _type[a]]
     else:
-        context_feedback = feedback_df[feedback_df['Order']!=0]
+        context_feedback = feedback_df[feedback_df['Order'] != 0]
     context_feedback['Level'] = context_feedback['Level'].map(lambda _x: lvl(_x, b))
     plot_feedback(ax, None, context_feedback, _color, _level)
 #%%
