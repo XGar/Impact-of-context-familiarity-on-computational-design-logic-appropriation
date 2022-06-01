@@ -8,19 +8,19 @@ import seaborn as sns
 from matplotlib import lines
 from matplotlib.gridspec import GridSpec
 
-_type = ['Grasshopper', 'Hybrid', 'Plugin', 'Tot', 'Average']
+_context = ['Grasshopper', 'Hybrid', 'Rhino', 'Tot', 'Average']
 niv = ['No experience', 'Novice', 'Limited', 'Basic', 'Advanced', 'Expert']
-Software = ['Autocad', 'Blender', 'SketchUp', 'Rhino', 'Grasshopper', 'Revit',
-            'Archicad', '3dsMax', 'Average', 'Modeling', 'Bim', 'Rhino+GH']
+Software = ['Autocad', 'SketchUp', 'Rhino', 'Grasshopper', 'Revit',
+            'Archicad', 'Average', 'Modeling', 'Bim', 'Rhino+GH']
 _color = sns.mpl_palette('Paired', 6)
 _color2 = sns.mpl_palette('RdYlBu', 3)
 
 
-def global_analysis(df, time_df, study_columns, _title, _level='Type', o=None, sw='Average'):
-    d = ['Level', 'Type', 'Order']
+def global_analysis(df, time_df, study_columns, _title, _level='Context', o=None, sw='Average', detail=False):
+    d = ['Level', 'Context', 'Order']
+    b = Software.index(sw)
 
     if _level == 'Level':
-        b = Software.index(sw)
         df1 = df.reset_index(_level, drop=False)
         df1[_level] = df1[_level].map(lambda _x: lvl(_x, b))
         df1.set_index([_level], append=True, inplace=True)
@@ -28,17 +28,22 @@ def global_analysis(df, time_df, study_columns, _title, _level='Type', o=None, s
         df1 = df
     drop2 = ['Name']
     if o is not None:
-        df1 = df1.xs(_type[o], level='Type')
-        d.remove('Type')
-    else:
-        df1 = df1.drop(['Tot','Average'], level='Type')
+        df1 = df1.xs(_context[o], level='Context')
+        d.remove('Context')
+
     drop2.append(_level)
-    df1 = df1.drop(0, level='Order').droplevel([x for x in d if x != _level])
-    a = df1.groupby(level=drop2, sort=False).sum()
+    df1 = df1.drop(0, level='Order')
+    dd=[]
+    for item in df1.index.names:
+        dd.append(item)
+    dd.remove('Object')
+    df2 = df1.groupby(level=dd, sort=False).sum()
+    a = df2.groupby(level=drop2, sort=False).sum()
+    df1 = df1.droplevel([x for x in d if x != _level])
     time_ratio = (df1.droplevel('Object')['Time'] /
                   a.loc[df1.droplevel('Object').index]['Time'])
     time_ratio = pd.DataFrame(time_ratio.values, index=df1['Time'].index)
-
+    a = df2.groupby(level=drop2, sort=False).mean()
     if 'Time' in a.columns:
         a['Time'] = a['Time'] / 60
     if 'Max' in a.columns:
@@ -47,26 +52,30 @@ def global_analysis(df, time_df, study_columns, _title, _level='Type', o=None, s
         a['CV'] = a.loc[:, 'TileXSize':'DoorNumber'].std(axis=1) / a.loc[:, 'TileXSize':'DoorNumber'].mean(axis=1)
     if 'Iterations / Minute' in study_columns:
         a['Iterations / Minute'] = a['Total'] / a['Time']
-    f = a.groupby(level=_level, sort=True).mean()
-    height = 5+len(f.index.tolist())/3
-    fig = plt.figure(figsize=(22, height), facecolor="#fefdfd")
+
+    f = a.sort_index(level=_level)
+    c = detail
+    if not c:
+        f = a.groupby(level=_level, sort=True).mean()
+    height = int(6+len(f.index.tolist())/4)
+    fig = plt.figure(figsize=(22, height), facecolor="#fefefe")
     ltitle = _level
     if _level == 'Level':
         ltitle = sw+' level'
     if o is None:
         Title = _title + ' by ' + ltitle
     else:
-        Title = _type[o] + ": " + _title + ' by ' + ltitle
+        Title = _context[o] + ": " + _title + ' by ' + ltitle
     fig.suptitle(Title, x=0.5, y=0.98, fontsize=20)
-    gheight = int(4.5 + len(f.index.tolist())/4)
-    gs = GridSpec(gheight, 24, figure=fig, wspace=3)
+    gheight = (5 + len(f.index.tolist())/4).__round__()
+    gs = GridSpec(gheight, 24, figure=fig, wspace=3, hspace=3/gheight)
     ax1 = fig.add_subplot(gs[1:4, :3])
     ax3 = fig.add_subplot(gs[1:4, 3:6])
     ax4 = fig.add_subplot(gs[1:4, 6:9])
     ax14 = fig.add_subplot(gs[1:4, 9:12])
     ax9 = fig.add_subplot(gs[4:, 12:])
-    ax2 = fig.add_subplot(gs[2:4, 12:], sharex=ax9)
     ax5 = fig.add_subplot(gs[4:, 12:])
+    ax2 = fig.add_subplot(gs[2:4, 12:], sharex=ax9)
     ax6 = fig.add_subplot(gs[4:, :3])
     ax7 = fig.add_subplot(gs[4:, 3:6])
     ax8 = fig.add_subplot(gs[4:, 6:9])
@@ -77,40 +86,47 @@ def global_analysis(df, time_df, study_columns, _title, _level='Type', o=None, s
     ax16 = fig.add_subplot(gs[:1, 9:12])
     ax13 = fig.add_subplot(gs[:2, 12:])
 
-    _color3 = sns.mpl_palette("RdYlBu", len(f.index.tolist()))
+    _color3 = sns.mpl_palette("RdYlBu", 3)
 
-    if _level == 'Type':
+    if _level == 'Context':
         def mapper(self):
-            return _type.index(self)
-        color_set=_color3
+            return _context.index(self)
+        color_set = _color3
     elif _level == 'Order':
         def mapper(self):
             return self-1
-        color_set=_color3
+        color_set = _color3
     else:
         def mapper(self):
-            return (self)
+            return niv.index(self)
         _color3 = _color
-        f.sort_index(inplace=True)
+        a = a.reset_index(_level, drop=False)
+        a[_level] = a[_level].map(lambda _x: niv[_x])
+        a.set_index([_level], append=c, inplace=True)
         f = f.reset_index(_level, drop=False)
-        color_set = f[_level].map(lambda _x: _color[_x])
+        color_set = f.groupby([_level],as_index=False).mean()[_level].map(lambda _x: _color[_x])
         f[_level] = f[_level].map(lambda _x: niv[_x])
-        f.set_index([_level], append=False, inplace=True)
+        f.set_index([_level], append=c, inplace=True)
 
     for study_column, ax in zip(study_columns, [ax6, ax7, ax8, ax15]):
         sns.heatmap(f.loc[:, [study_column]], ax=ax, cbar=None, annot=True, cmap="vlag", fmt=".1f")
         ax.set_yticklabels("")
         ax.set_ylabel(None)
-    ax6.set_yticklabels(f.index.tolist(), rotation='horizontal')
+
+    if c:
+        lbl = [item[0] for item in f.index.tolist()]
+    else:
+        lbl = f.index.tolist()
+    ax6.set_yticklabels(lbl, rotation='horizontal')
 
     ###
-    sns.heatmap(f.loc[:, 'TileXSize':'DoorNumber'], ax=ax9, cbar=None, annot=True, cmap='vlag', linewidth=0.5)
+    sns.heatmap(f.loc[:, 'TileXSize':'DoorNumber'], ax=ax9, cbar=None, annot=False, cmap='vlag', linewidth=0.5)
     sns.heatmap(f.loc[:, 'TileXSize':'DoorNumber'], ax=ax5, cbar=None, annot=True, cmap="vlag", linewidth=0.5)
 
     if o is not None:
-        time_df = time_df.xs(_type[o], level='Type')
+        time_df = time_df.xs(_context[o], level='Context')
     else:
-        time_df = time_df.drop(['Tot', 'Average'], level='Type')
+        time_df = time_df.drop(['Tot', 'Average'], level='Context')
     df = time_df.reset_index(_level, drop=False)
     if _level == 'Level':
         df[_level] = df[_level].map(lambda _x: lvl(_x, b))
@@ -125,17 +141,41 @@ def global_analysis(df, time_df, study_columns, _title, _level='Type', o=None, s
     gh = a.loc[:, 'TileXSize':'DoorNumber']
     gh.columns = locs
     gh = gh.reset_index(level=_level, drop=False)
+    if _level == 'Level':
+        gh[_level] = gh[_level].apply(lambda x: niv.index(x))
     gh.sort_values(_level, inplace=True)
     if _level == 'Level':
         gh[_level] = gh[_level].apply(lambda x: niv[x])
     gh = gh.melt(id_vars=[_level])
     sns.barplot(x=gh['variable'], y=gh['value'], data=a, hue=gh[_level], ax=ax2, palette=color_set, errwidth=0.5)
-
     ax2.legend(title=ltitle, loc=1)
     double_plot(a, study_columns[0], ax10, ax1, study_columns[0], color_set, _level, mapper)
     double_plot(a, study_columns[1], ax11, ax3, study_columns[1], color_set, _level, mapper)
     double_plot(a, study_columns[2], ax12, ax4, study_columns[2], color_set, _level, mapper)
     double_plot(a, study_columns[3], ax16, ax14, study_columns[3], color_set, _level, mapper)
+
+    level_length = f.reset_index(_level)[_level].apply(mapper).sort_values().value_counts()
+    if c:
+        x1 = 0.125
+        x2 = 0.9
+        y1 = 3.9/gheight #0.435
+        y2 = 0.99/gheight
+        _t = pd.Series([0, 0, 0, 0, 0, 0])
+        figlines=[]
+        #display(level_length.sum())
+
+        #level_length = _t.T.add(level_length, fill_value=0.0, axis=0)
+        h_cell = (y1 - y2) / level_length.sum()
+        #display(h_cell)
+        for i in range(len(color_set)):
+            _h_cell = h_cell * (level_length.to_list()[i])
+            y2 = y1 - _h_cell + 0.001 * 2
+            x = [(x1, x2), (x2, x1), (x1, x1)]
+            y = [(y1, y1), (y2, y2), (y2, y1)]
+            line = lines.Line2D(x, y, transform=fig.transFigure, c=color_set[i], linewidth=2)
+            figlines.append(line)
+            y1 = y2 - 0.001 * 2
+        fig.lines = figlines
 
     ax2.set_xlabel(None)
     #ax2.legend(loc='upper left')
@@ -156,9 +196,9 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, sw, title, survey='B'
     matplotlib.rcParams['axes.autolimit_mode'] = 'round_numbers'
     matplotlib.rcParams['axes.xmargin'] = 0
     matplotlib.rcParams['axes.ymargin'] = 0
-    label = (_type[a - 1])
-    df2 = df.xs(label, level='Type')
-    df = df.groupby(level=['Name', 'Level', 'Order', 'Type'], sort=False).sum()
+    label = (_context[a - 1])
+    df2 = df.xs(label, level='Context')
+    df = df.groupby(level=['Name', 'Level', 'Order', 'Context'], sort=False).sum()
     if 'Max' in df.columns:
         df['Max'] = df.loc[:, 'TileXSize':'DoorNumber'].max(axis=1)
     if 'CV' in df.columns:
@@ -167,7 +207,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, sw, title, survey='B'
         df2.drop(0, level='Order').apply((lambda x: x.index.values), axis=0)['Time'].values]['Time'])
     time_ratio = pd.DataFrame(time_ratio.values, index=df2['Time'].index)
     fig = plt.figure(figsize=(24, 12), facecolor="#fefdfd")
-    _title = str(_type[a - 1])
+    _title = str(_context[a - 1])
     fig.suptitle(_title + ': '+'Number of ' + title + " by " + sw + ' level', y=0.94, fontsize=20)
     gs = GridSpec(4, 11, figure=fig, wspace=0.4, hspace=0.2)
     ax1 = fig.add_subplot(gs[:1, 3:6])
@@ -194,18 +234,18 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, sw, title, survey='B'
             result['Iterations / Minute'] = result['Total'] / result['Time']
         if 'Time' not in keep_list:
             result = result.drop(['Time'], axis=1)
-    context_feedback = feedback_df2[feedback_df2['Type'] == _type[a - 1]]
+    context_feedback = feedback_df2[feedback_df2['Context'] == _context[a - 1]]
     context_feedback['Level'] = context_feedback['Level'].map(lambda _x: lvl(_x, b))
     ax = [ax1, ax2, ax3, ax4, ax6, ax7, ax8, ax9, ax10]
 
     for i in range(3):
-        interaction_line_plot(ax[i], result.xs(label, level='Type'), i + 1, keep_list, _color)
+        interaction_line_plot(ax[i], result.xs(label, level='Context'), i + 1, keep_list, _color)
         box_plot(ax[i + 3], i, result, keep_list, label)
         plot_feedback(ax[i + 6], i + 1, context_feedback, _color)
     ax6.set_yticklabels("")
     ax7.set_yticklabels("")
     # matplotlib.rcParams.update(matplotlib.rcParamsDefault)
-    df = time_df.xs(_type[a - 1], level='Type').reset_index('Level', drop=False)
+    df = time_df.xs(_context[a - 1], level='Context').reset_index('Level', drop=False)
     df['Level'] = df['Level'].map(lambda _x: lvl(_x, b))
     df0level = df.xs(1, level='Order')['Level'].unique()
     df1level = df.xs(2, level='Order')['Level'].unique()
@@ -223,7 +263,7 @@ def order_analysis(a, df, time_df, feedback_df, keep_list, sw, title, survey='B'
     ax15.tick_params(axis='y', pad=-1)
     ax15.set_ylabel(None)
     ax15.set_xlabel(None)
-    level_plot = result.xs(label, level='Type').drop(keep_list, axis=1).drop(['Level'], axis=1)
+    level_plot = result.xs(label, level='Context').drop(keep_list, axis=1).drop(['Level'], axis=1)
     level_plot = level_plot.reset_index('Order', drop=False)
     level_plot = level_plot.melt(id_vars='Order')
     sns.barplot(x='variable', y='value', data=level_plot, hue='Order', palette='RdYlBu_r', ax=ax5,
@@ -252,13 +292,13 @@ def context_reorder(data, choice):
     order3 = context_plugin.index[0]
     _order = [_x for _, _x in sorted(zip([order1, order2, order3], [1, 2, 3]))]
     if choice == 0:
-        return [context_grasshopper, context_hybrid, context_plugin], ['Grasshopper', 'Hybrid', 'Plugin'], _order
+        return [context_grasshopper, context_hybrid, context_plugin], ['Grasshopper', 'Hybrid', 'Rhino'], _order
     elif choice == 1:
         return context_grasshopper, 'Grasshopper'
     elif choice == 2:
         return context_hybrid, 'Hybrid'
     elif choice == 3:
-        return context_plugin, 'Plugin'
+        return context_plugin, 'Rhino'
 
 
 def sub_selection(_context, choice):
@@ -315,11 +355,11 @@ def plot_feedback(ax, a, _feedback_df, _color, _level='Level'):
             return niv[int(self)]
         def color(self):
             return _color[int(self)]
-    elif _level == 'Type':
+    elif _level == 'Context':
         def mapper(self):
             return self
         def color(self):
-            return _color[_type.index(self)]
+            return _color[_context.index(self)]
     elif _level == 'Order':
         def mapper(self):
             return self
@@ -368,7 +408,7 @@ def interaction_line_plot(_ax, result, _order, keep_list, _color):
 
 
 def box_plot(ax, c, _r, keep_list, label):
-    r = _r.xs(label, level='Type')[[keep_list[c], 'Level']]
+    r = _r.xs(label, level='Context')[[keep_list[c], 'Level']]
     r3 = _r.drop(0, level='Order')[[keep_list[c], 'Level']].reset_index('Order', drop=False)
     r3['Order'] = 4
     r = r.reset_index('Order', drop=False)
@@ -510,12 +550,13 @@ def choose_level(_df, b, _level='Level'):
 
 
 def context_analysis(a, df, time_df, study_columns, sw='Average', title='Title', y2=0.190, rorder=3, _level='Level'):
-    b=Software.index(sw)
-    df = df.xs(_type[a], level='Type')
+    b = Software.index(sw)
+    df = df.xs(_context[a], level='Context')
     it2 = df.groupby(level=['Name', 'Level', 'Order'], sort=False).sum()
     time_ratio = (df.droplevel('Object')['Time'] /
                   it2.loc[df.apply((lambda _x: _x.index.values), axis=0)['Time'].values]['Time'])
     time_ratio = pd.DataFrame(time_ratio.values, index=df['Time'].index)
+
     if 'Time' in it2.columns:
         it2['Time'] = it2['Time'] / 60
         if 'Iterations / Minute' in study_columns:
@@ -531,7 +572,7 @@ def context_analysis(a, df, time_df, study_columns, sw='Average', title='Title',
     it = it2[study_columns]
     it2 = it2.loc[:, 'TileXSize':'DoorNumber']
     fig = plt.figure(figsize=(22, 9), facecolor="#fefdfd")
-    _Title = str(_type[a])
+    _Title = str(_context[a])
     fig.title = str(title)
     gs = GridSpec(7, 24, figure=fig, wspace=3.5, hspace=0.3)
     ax1 = fig.add_subplot(gs[1:4, :3])
@@ -614,7 +655,7 @@ def context_analysis(a, df, time_df, study_columns, sw='Average', title='Title',
     double_plot(it, study_columns[2], ax12, ax4, study_columns[2], color_set, _level, (lambda _x: _x), _color)
     double_plot(it, study_columns[3], ax16, ax14, study_columns[3], color_set, _level, (lambda _x: _x), _color)
 
-    df = time_df.xs(_type[a], level='Type').reset_index(_level, drop=False)
+    df = time_df.xs(_context[a], level='Context').reset_index(_level, drop=False)
     if _level == 'Level':
         df[_level] = df[_level].map(lambda _x: lvl(_x, b))
     df_level = df[_level].unique()
@@ -634,7 +675,7 @@ def context_analysis(a, df, time_df, study_columns, sw='Average', title='Title',
     _t = pd.Series([0, 0, 0, 0, 0, 0])
     figlines=[]
     level_length = _t.T.add(level_length, fill_value=0.0, axis=0)
-    h_cell = (y1 - y2) / (len(it[str(study_columns[0])]) - 3)
+    h_cell = (y1 - y2) / (len(it[study_columns[0]]) - 3)
     if 0 in df_level:
         _h_cell = h_cell * (level_length.loc[0])
         y2 = y1 - _h_cell + 0.001 * 2
@@ -669,15 +710,15 @@ def context_analysis(a, df, time_df, study_columns, sw='Average', title='Title',
         y1 = y2 - 0.001 * 2
     if 4 in df_level:
         _h_cell = h_cell * (level_length.loc[4])
-        y2 = y1 - _h_cell + 0.001 * 1
+        y2 = y1 - _h_cell + 0.001 * 2
         x = [(x1, x2), (x2, x1), (x1, x1)]
         y = [(y1, y1), (y2, y2), (y2, y1)]
         line5 = lines.Line2D(x, y, transform=fig.transFigure, c=colors[4], linewidth=2)
         figlines.append(line5)
-        y1 = y2 - 0.0015 * 1
+        y1 = y2 - 0.001 * 2
     if 5 in df_level:
         _h_cell = h_cell * (level_length.loc[5])
-        y2 = y1 - _h_cell + 0.0015 * 0
+        y2 = y1 - _h_cell + 0.001 * 2
         x = [(x1, x2), (x2, x1), (x1, x1)]
         y = [(y1, y1), (y2, y2), (y2, y1)]
         line6 = lines.Line2D(x, y, transform=fig.transFigure, c=colors[5], linewidth=2)
@@ -717,7 +758,7 @@ def feedback(feedback_df, a, sw, survey='B', _level='Level'):
     l= ['A','B']
     survey_order = ['after each interaction', 'at end of experiment']
     feedback_df=feedback_df[feedback_df['Survey'] == survey]
-    fig = plt.figure(figsize=(12, 8), facecolor="#fefefe", dpi=200)
+    fig = plt.figure(figsize=(12, 5), facecolor="#fefefe", dpi=200)
     ax = fig.add_subplot()
     if _level == 'Level':
         ltitle=sw+' level '
@@ -726,10 +767,10 @@ def feedback(feedback_df, a, sw, survey='B', _level='Level'):
     if a is None:
         title_2='Survey results '
     else:
-        title_2=_type[a]+' survey results '
+        title_2= _context[a] + ' survey results '
     fig.suptitle(title_2+survey_order[l.index(survey)]+' by ' + ltitle, fontsize=16, y=0.92)
     if a is not None:
-        context_feedback = feedback_df[feedback_df['Type'] == _type[a]]
+        context_feedback = feedback_df[feedback_df['Context'] == _context[a]]
     else:
         context_feedback = feedback_df[feedback_df['Order'] != 0]
     context_feedback['Level'] = context_feedback['Level'].map(lambda _x: lvl(_x, b))
