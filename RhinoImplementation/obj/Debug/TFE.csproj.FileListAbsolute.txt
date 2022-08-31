@@ -1,0 +1,6 @@
+C:\Users\Xavier\OneDrive\Documents\Ulg-0498185723\Master2\TFE\testPlugin\TFE\TFE\obj\Debug\TFE.csprojAssemblyReference.cache
+C:\Users\Xavier\OneDrive\Documents\Ulg-0498185723\Master2\TFE\testPlugin\TFE\TFE\obj\Debug\TFE.csproj.CoreCompileInputs.cache
+C:\Users\Xavier\OneDrive\Documents\Ulg-0498185723\Master2\TFE\testPlugin\TFE\TFE\bin\TFE.dll
+C:\Users\Xavier\OneDrive\Documents\Ulg-0498185723\Master2\TFE\testPlugin\TFE\TFE\bin\TFE.pdb
+C:\Users\Xavier\OneDrive\Documents\Ulg-0498185723\Master2\TFE\testPlugin\TFE\TFE\obj\Debug\TFE.dll
+C:\Users\Xavier\OneDrive\Documents\Ulg-0498185723\Master2\TFE\testPlugin\TFE\TFE\obj\Debug\TFE.pdb
